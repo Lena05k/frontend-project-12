@@ -1,4 +1,4 @@
-# [React App boilerplate](https://js-react-hexlet-chat.onrender.com/)
+# [React App boilerplate](frontend-project-12-production-f88e.up.railway.app)
 
 ## Setup
 
