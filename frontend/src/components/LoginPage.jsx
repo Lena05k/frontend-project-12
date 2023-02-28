@@ -7,18 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { avatarImages } from '../assets/avatar.jpg';
-import { AuthorizationContext } from '../../AuthorizationContext';
 import { userLogin } from '../../routes';
 
 const Login = () => {
-  const { login } = useContext(AuthorizationContext);
-  const [authFailed, setAuthFailed] = useState(false);
+  const [authFailed, setAuthFailed] = useState('');
   const inputRef = useRef();
   const { t } = useTranslation();
-  const validationShema = yup.object().shape({
-    username: yup.string().required('required'),
-    password: yup.string().required('required'),
-  });
 
   // как мне увидеть результать useEffect через консоли?
   useEffect(() => {
@@ -30,28 +24,9 @@ const Login = () => {
       username: '',
       password: '',
     },
-    onSubmit: (values, { setSubmitting }) => {
-      setSubmitting(false);
-      const request = (data) => {
-        userLogin(data)
-          .then((response) => login(response.data))
-          .cath((error) => {
-            if (!error.isAxiosError) {
-              toast.error(t('errors.unknown'));
-              return;
-            }
-            if (error.response?.status === 401) {
-              setAuthFailed(true);
-              inputRef.current.select();
-            } else {
-              toast.error(t('errors.network'));
-            }
-          });
-      };
-      request(values);
-    },
-    validationSchema: validationShema,
-  });
+    onSubmit:
+  // не очень понимаю какую логику писать в onSubmit
+  );
 
   return (
     <div className="container-fluid h-100">

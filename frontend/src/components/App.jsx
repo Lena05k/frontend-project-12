@@ -1,3 +1,16 @@
-const App = () => <h1>Hexlet Chat</h1>;
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Login from './LoginPage';
+
+function App() {
+  return (
+    <Routes path="/">
+      <Route
+        path="login"
+        element={<Login />}>
+      </Route>
+    </Routes>
+  );
+};
 
 export default App;
