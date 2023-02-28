@@ -1,4 +1,4 @@
-# [React App boilerplate](frontend-project-12-production-f88e.up.railway.app)
+# [React App boilerplate](https://frontend-project-12-production-f88e.up.railway.app)
 
 ## Setup
 
