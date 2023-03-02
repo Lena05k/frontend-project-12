@@ -2,15 +2,14 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './LoginPage';
 
-function App() {
+const App = () => {
   return (
-    <Routes path="/">
-      <Route
-        path="login"
-        element={<Login />}>
-      </Route>
-    </Routes>
-  );
+    <React.StrictMode>
+      <Routes path="/">
+        <Route path="login" element={<Login />} />
+      </Routes>
+    </React.StrictMode>
+  )
 };
 
 export default App;
