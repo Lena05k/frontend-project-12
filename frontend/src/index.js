@@ -1,9 +1,25 @@
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import init from './init.jsx';
+import { createBrowserRouter } from "react-router-dom";
+import { Provider } from 'react-redux';
 
-const app = async () => {
-  const root = ReactDOM.createRoot(document.getElementById('root'));
-  root.render(await init());
-};
+import App from './components/App';
+import Login from './components/LoginPage';
 
-app();
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: '/login',
+    element: <Login />
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Provider store={router}>
+      <App />
+  </Provider>
+);
+
