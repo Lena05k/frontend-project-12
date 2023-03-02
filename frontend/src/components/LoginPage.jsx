@@ -1,20 +1,19 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useFormik } from 'formik';
 import { Form, Button } from 'react-bootstrap';
-import * as yup from 'yup';
+// import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { avatarImages } from '../assets/avatar.jpg';
-import { userLogin } from '../../routes';
+// import { toast } from 'react-toastify';
+import avatarImages from '../assets/avatar.jpg';
+// import { userLogin } from '../../routes';
 
 const Login = () => {
   const [authFailed, setAuthFailed] = useState('');
   const inputRef = useRef();
   const { t } = useTranslation();
 
-  // как мне увидеть результать useEffect через консоли?
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -23,9 +22,8 @@ const Login = () => {
     initialValues: {
       username: '',
       password: '',
-    },
-    onSubmit:
-  // не очень понимаю какую логику писать в onSubmit
+    }}
+    // onSubmit:{}
   );
 
   return (
@@ -96,3 +94,5 @@ const Login = () => {
 };
 
 export default Login;
+
+
