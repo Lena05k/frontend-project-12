@@ -1,15 +1,15 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './LoginPage';
+import ChatPage from './ChatPage'
 
-const App = () => {
-  return (
-    <React.StrictMode>
-      <Routes path="/">
-        <Route path="login" element={<Login />} />
-      </Routes>
-    </React.StrictMode>
-  )
-};
+const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<ChatPage />} />
+      <Route path="login" element={<Login />} />
+    </Routes>
+  </BrowserRouter>
+);
 
 export default App;
