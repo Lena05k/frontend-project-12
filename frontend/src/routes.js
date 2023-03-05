@@ -1,3 +1,4 @@
+const apiPath = 'api/v1';
 export default {
-  apiLoginPath: () => '/api/v1/login',
+  loginPath: () => [apiPath, 'login'].join('/'),
 };
