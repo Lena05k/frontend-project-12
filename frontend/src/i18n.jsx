@@ -8,11 +8,11 @@ const i18n = async () => {
   await i18n
     .use(initReactI18next)
     .init({
-      resources,
       fallbackLng: 'ru',
       interpolation: {
         escapeValue: false,
-      }
+      },
+      resources,
     });
 };
 
