@@ -1,15 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './LoginPage';
-import ChatPage from './ChatPage'
+import ChatPage from './ChatPage';
+import LoginForm from './LoginPage';
+import ErrorPage from './ErrorPath'
 
 const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<ChatPage />} />
-      <Route path="login" element={<Login />} />
-    </Routes>
-  </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ChatPage />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/*" element={<ErrorPage />} />
+      </Routes>
+    </BrowserRouter>
 );
 
 export default App;
