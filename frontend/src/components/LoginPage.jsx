@@ -1,51 +1,66 @@
-// import axios from 'axios';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+// import { useFormik } from 'formik';
+import 'bootstrap';
+// import { Form, Button } from 'react-bootstrap';
+// import { useTranslation } from 'react-i18next';
+// import {Link, useNavigate} from 'react-router-dom';
+// import axios from "axios";
+// import avatarImages from '../assets/avatar.jpg';
+// import routes from "../routes";
+// import { LoginSchema } from '../utils/validation'
 
 const Login = () => {
   return (
-    <div>Hello!</div>
+    <div>
+      <h1>Login</h1>
+    </div>
   );
 };
 
 export default Login;
 
-// import { useFormik } from 'formik';
-// import { Form, Button } from 'react-bootstrap';
-// import { useTranslation } from 'react-i18next';
-// import {Link, useNavigate} from 'react-router-dom';
-// import { toast } from 'react-toastify';
-// import avatarImages from '../assets/avatar.jpg';
-// import routes from "../routes";
-// import { userLogin } from '../../routes';
-
-// const [authFailed, setAuthFailed] = useState('');
-// const inputRef = useRef();
-// const navigate = useNavigate()
-// // const auth = useAuth();
-// const { t } = useTranslation();
+//   const { t } = useTranslation();
+//   const inputRef = useRef();
+//   const navigate = useNavigate();
+//   const { logIn } = useContext();
+//   const [authFailed, setAuthFailed] = useState(false);
 //
+//   useEffect(() => {
+//     inputRef.current.focus();
+//   }, []);
 //
-// useEffect(() => {
-//   inputRef.current.focus();
-// }, []);
-
-// const formik = useFormik({
-//    initialValues: {
-//       username: '',
-//       password: '',
-//     },
-//     onSubmit: async (values) => {
-//       setAuthFailed('');
-//       const { username, password } = values;
-//       return axios.post(routes.apiLoginPath(), { username, password })
-//      .then((response) => {
-//         console.log(response)
-//       })
-//       .catch ((error) => {
-//         console.log(error);
-//      });
-//     }
-// });
+//   const formik = useFormik({
+//      initialValues: {
+//         username: '',
+//         password: '',
+//       },
+//       onSubmit: async (values) => {
+//         setAuthFailed(false);
+//
+//         try {
+//           const res = await axios.post(routes.loginPath(), values);
+//           console.log('axios.post:',res);
+//           if (res.status === 200) {
+//             console.log('Res:',logIn(res.data));
+//             const { form } = { form: { pathname: '/'} };
+//             console.log('Form:', {form});
+//             console.log(navigate(form));
+//           }
+//         } catch (error) {
+//           formik.setSubmitting(false);
+//           if (error.isAxiosError && error.response.status === 401) {
+//             setAuthFailed(true);
+//             inputRef.current.select();
+//             return;
+//           }
+//           notify('error');
+//           console.log(error);
+//           throw Error('NetworkError');
+//         }
+//       },
+//       validationSchema: LoginSchema,
+//       validateOnChange: false,
+//   });
 
 // <div className="container-fluid h-100">
 //   <div className="row justify-content-center align-content-center h-100">
