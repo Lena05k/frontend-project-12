@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { useAuth } from '../hooks';
 import routes from '../routes';
-import loginImage from '../images/login.jfif';
+import loginImage from '../assets/avatar.jpg';
 
 const Login = () => {
   const { t } = useTranslation();

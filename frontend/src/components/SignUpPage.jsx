@@ -14,7 +14,7 @@ import { useFormik } from 'formik';
 import { useAuth } from '../hooks';
 import { setLoadingStatus } from '../slices/userInterfaceSlice';
 import routes from '../routes';
-import signUpImage from '../images/signup.jpg';
+import signUpImage from '../assets/avatar_1.jpg';
 
 const SignUp = () => {
   const { t } = useTranslation();

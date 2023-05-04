@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { selectors as channelsSelectors } from '../slices/channelsSlice';
-import { ReactComponent as PlusIcon } from '../images/plus-icon.svg';
+import { ReactComponent as PlusIcon } from '../assets/plus-icon.svg';
 import Channel from './Channel';
 import getModal from '../modals/index.js';
 

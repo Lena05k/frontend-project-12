@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import page404 from '../images/page-404.svg';
+import page404 from '../assets/page-404.svg';
 
 const ErrorPage = () => {
   const { t } = useTranslation();

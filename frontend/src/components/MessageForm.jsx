@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { useSocket } from '../hooks';
 import { setLoadingStatus } from '../slices/userInterfaceSlice';
-import ArrowRightIcon from '../images/arrow-right-icon.svg';
+import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 
-filter.add(filter.getDictionary('en'));
 filter.add(filter.getDictionary('ru'));
 
 const MessageForm = () => {
