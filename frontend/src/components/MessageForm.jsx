@@ -7,8 +7,6 @@ import { useSocket } from '../hooks';
 import { setLoadingStatus } from '../slices/userInterfaceSlice';
 import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 
-filter.add(filter.getDictionary('ru'));
-
 const MessageForm = () => {
   const { t } = useTranslation();
   const { socket } = useSocket();
