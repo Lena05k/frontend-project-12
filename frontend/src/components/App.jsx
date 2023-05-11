@@ -8,7 +8,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
+import { Provider as ErrorBoundary } from '@rollbar/react';
 import { toast, ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,17 +19,10 @@ import Header from './Header';
 import MainPage from './MainPage';
 import Login from './LoginPage';
 import ErrorPage from './ErrorPage';
-import AuthProvider from '../contexts/AuthProvider';
 import { useAuth } from '../hooks';
-import SocketProvider from '../contexts/SocketProvider';
 import fetchInitialData from '../slices/fetchInitialData';
 import { setError } from '../slices/userInterfaceSlice';
 import SignUp from './SignUpPage';
-
-const rollbarConfig = {
-  accessToken: '1be4cfe4d0894c0fb892e19a57aff1c4',
-  environment: 'production',
-};
 
 const ErrorDisplay = ({ error }) => (
   <div className="container m-4 text-center">
@@ -64,41 +57,29 @@ const App = () => {
   }, []);
 
   return (
-    <React.StrictMode>
-      <RollbarProvider config={rollbarConfig}>
-        <ErrorBoundary
-          fallbackUI={ErrorDisplay}
-        >
-          <SocketProvider>
-            <AuthProvider>
-              <Router>
-                <div className="d-flex flex-column h-100">
-                  <Header />
-                  <ErrorBoundary fallbackUI={ErrorDisplay}>
-                    <Routes>
-                      <Route path={routes.root()} errorElement={<ErrorPage />}>
-                        <Route
-                          index
-                          element={(
-                            <PrivateRoute>
-                              <MainPage />
-                            </PrivateRoute>
-                          )}
-                        />
-                        <Route path={routes.login()} element={<Login />} />
-                        <Route path={routes.signup()} element={<SignUp />} />
-                        <Route path={routes.notFound()} element={<ErrorPage />} />
-                      </Route>
-                    </Routes>
-                  </ErrorBoundary>
-                  <ToastContainer />
-                </div>
-              </Router>
-            </AuthProvider>
-          </SocketProvider>
+    <Router>
+      <div className="d-flex flex-column h-100">
+        <Header />
+        <ErrorBoundary fallbackUI={ErrorDisplay}>
+          <Routes>
+            <Route path={routes.root()} errorElement={<ErrorPage />}>
+              <Route
+                index
+                element={(
+                  <PrivateRoute>
+                    <MainPage />
+                  </PrivateRoute>
+                )}
+              />
+              <Route path={routes.login()} element={<Login />} />
+              <Route path={routes.signup()} element={<SignUp />} />
+              <Route path={routes.notFound()} element={<ErrorPage />} />
+            </Route>
+          </Routes>
         </ErrorBoundary>
-      </RollbarProvider>
-    </React.StrictMode>
+        <ToastContainer />
+      </div>
+    </Router>
   );
 };
 
