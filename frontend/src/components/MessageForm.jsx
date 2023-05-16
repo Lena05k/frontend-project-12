@@ -3,13 +3,13 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import { useSocket } from '../hooks';
+import { useApi } from '../hooks';
 import { setLoadingStatus } from '../slices/userInterfaceSlice';
 import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 
 const MessageForm = () => {
   const { t } = useTranslation();
-  const { socket } = useSocket();
+  const { socket } = useApi();
   const dispatch = useDispatch();
   const inputRef = useRef();
   const { currentChannelId: channelId, loadingStatus } = useSelector((state) => state.ui);
