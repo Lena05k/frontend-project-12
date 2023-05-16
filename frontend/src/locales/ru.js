@@ -57,5 +57,24 @@ export default {
       toMainPage_title: 'Но вы можете перейти',
       toMainPage_text: 'на главную страницу',
     },
+    rename: {
+      label: 'Имя канала',
+      title: 'Переименовать канал',
+      submitButton: 'Отправить',
+      cancelButton: 'Отменить',
+    },
+    add: {
+      label: 'Имя канала',
+      title: 'Добавить канал',
+      submitButton: 'Отправить',
+      cancelButton: 'Отменить',
+    },
+    remove: {
+      label: 'Имя канала',
+      title: 'Удалить канал',
+      confirm: 'Уверены?',
+      submitButton: 'Отправить',
+      cancelButton: 'Отменить',
+    },
   },
 };
