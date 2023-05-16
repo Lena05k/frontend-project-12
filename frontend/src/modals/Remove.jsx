@@ -5,13 +5,13 @@ import {
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useSocket } from '../hooks';
+import { useApi } from '../hooks';
 import { actions as channelsActions } from '../slices/channelsSlice';
 import { setLoadingStatus, setCurrentChannelId } from '../slices/userInterfaceSlice';
 
 const Remove = (props) => {
   const { t } = useTranslation();
-  const { socket } = useSocket();
+  const { socket } = useApi();
   const dispatch = useDispatch();
 
   const { defaultChannelId } = useSelector((state) => state.ui);
@@ -32,16 +32,15 @@ const Remove = (props) => {
   return (
     <Modal centered show onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('remove.title')}</Modal.Title>
       </Modal.Header>
-
       <Modal.Body>
-        <p className="lead">Уверены?</p>
+        <p className="lead">{t('remove.confirm')}</p>
         <div className="d-flex justify-content-end">
           <Button onClick={onHide} variant="secondary" className="me-2">
-            Отменить
+            {t('remove.cancelButton')}
           </Button>
-          <Button onClick={onClickDeleteBtn} variant="danger" disabled={loadingStatus === 'loading'}>Удалить</Button>
+          <Button onClick={onClickDeleteBtn} variant="danger" disabled={loadingStatus === 'loading'}>{t('buttonNames.delete')}</Button>
         </div>
       </Modal.Body>
     </Modal>

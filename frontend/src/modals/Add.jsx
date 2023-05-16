@@ -1,5 +1,4 @@
 /* eslint func-names: 0, prefer-arrow-callback: 0, functional/no-this-expression: 0 */
-
 import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import {
@@ -11,21 +10,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
-import { useSocket } from '../hooks';
+import { useApi } from '../hooks';
 import { setLoadingStatus, setCurrentChannelId } from '../slices/userInterfaceSlice';
 import { actions as channelsActions, selectors as channelsSelectors } from '../slices/channelsSlice';
 
-filter.add(filter.getDictionary('en'));
-filter.add(filter.getDictionary('ru'));
+// filter.add(filter.getDictionary('ru'));
 
 const Add = (props) => {
   const { t } = useTranslation();
-  const { socket } = useSocket();
+  const { socket } = useApi();
   const { onHide } = props;
   const { loadingStatus } = useSelector((state) => state.ui);
   const channels = useSelector(channelsSelectors.selectAll);
   const inputElement = useRef();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -80,7 +77,7 @@ const Add = (props) => {
   return (
     <Modal centered show onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('title.add')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -101,9 +98,9 @@ const Add = (props) => {
             <div className="invalid-feedback">{formik.errors.name}</div>
             <div className="d-flex justify-content-end">
               <Button onClick={onHide} variant="secondary" className="me-2">
-                Отменить
+                {t('add.cancelButton')}
               </Button>
-              <Button disabled={loadingStatus === 'loading'} type="submit">Отправить</Button>
+              <Button disabled={loadingStatus === 'loading'} type="submit">{t('add.submitButton')}</Button>
             </div>
           </FormGroup>
         </form>

@@ -1,5 +1,4 @@
 /* eslint func-names: 0, prefer-arrow-callback: 0, functional/no-this-expression: 0 */
-
 import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import {
@@ -13,14 +12,13 @@ import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
 import { selectors as channelsSelectors, actions as channelsActions } from '../slices/channelsSlice';
 import { setLoadingStatus } from '../slices/userInterfaceSlice';
-import { useSocket } from '../hooks';
+import { useApi } from '../hooks';
 
-filter.add(filter.getDictionary('en'));
-filter.add(filter.getDictionary('ru'));
+// filter.add(filter.getDictionary('ru'));
 
 const Rename = (props) => {
   const { t } = useTranslation();
-  const { socket } = useSocket();
+  const { socket } = useApi();
   const dispatch = useDispatch();
   const { loadingStatus } = useSelector((state) => state.ui);
   const { onHide, modalInfo: { item } } = props;
@@ -78,9 +76,8 @@ const Rename = (props) => {
   return (
     <Modal centered show onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t('rename.title')}</Modal.Title>
       </Modal.Header>
-
       <Modal.Body>
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
@@ -95,11 +92,11 @@ const Rename = (props) => {
               data-testid="input-body"
               disabled={loadingStatus === 'loading'}
             />
-            <Form.Label className="visually-hidden" htmlFor="name">Имя канала</Form.Label>
+            <Form.Label className="visually-hidden" htmlFor="name">{t('rename.label')}</Form.Label>
             <div className="invalid-feedback">{formik.errors.name}</div>
             <div className="d-flex justify-content-end">
-              <Button onClick={onHide} variant="secondary" className="me-2">Отменить</Button>
-              <Button disabled={!formik.values.name || loadingStatus === 'loading'} type="submit">Отправить</Button>
+              <Button onClick={onHide} variant="secondary" className="me-2">{t('rename.cancelButton')}</Button>
+              <Button disabled={!formik.values.name || loadingStatus === 'loading'} type="submit">{t('rename.submitButton')}</Button>
             </div>
           </FormGroup>
         </form>
