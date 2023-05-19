@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { useApi } from '../hooks';
@@ -9,7 +10,7 @@ import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 
 const MessageForm = () => {
   const { t } = useTranslation();
-  const { socket } = useApi();
+  const { sendMessage } = useApi();
   const dispatch = useDispatch();
   const inputRef = useRef();
   const { currentChannelId: channelId, loadingStatus } = useSelector((state) => state.ui);
@@ -33,10 +34,14 @@ const MessageForm = () => {
         username,
       };
 
-      dispatch(setLoadingStatus('loading'));
-
-      socket.emit('newMessage', message, () => {
-        dispatch(setLoadingStatus('idle'));
+      sendMessage(message, (response) => {
+        if (response.status === 'ok') {
+          formik.resetForm();
+          dispatch(setLoadingStatus('loading'));
+        } else {
+          toast.error(t('yup.errors.networkError'));
+          dispatch(setLoadingStatus('idle'));
+        }
       });
 
       resetForm({ message: '' });
