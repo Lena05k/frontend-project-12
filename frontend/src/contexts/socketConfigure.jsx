@@ -11,7 +11,7 @@ const promosifySocket = (socket, type, data) => new Promise((resolve, reject) =>
   });
 });
 
-const socket = (socket) => {
+const socketConfigure = (socket) => {
   const sendMessage = (message) => promosifySocket(socket, 'newMessage', message);
   const createChannel = (channel) => promosifySocket(socket, 'newChannel', channel);
   const removeChannel = (channelId) => promosifySocket(socket, 'removeChannel', channelId);
@@ -41,4 +41,4 @@ const socket = (socket) => {
   };
 };
 
-export default socket;
+export default socketConfigure;
