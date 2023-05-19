@@ -9,21 +9,19 @@ import * as yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import filter from 'leo-profanity';
-import { useApi } from '../hooks';
-import { setLoadingStatus, setCurrentChannelId } from '../slices/userInterfaceSlice';
-import { actions as channelsActions, selectors as channelsSelectors } from '../slices/channelsSlice';
+import { useApi } from '../../hooks';
+import { closeModal } from '../../slices/modalSlice';
+import { selectors as channelsSelectors, actions } from '../../slices/channelsSlice';
 
-// filter.add(filter.getDictionary('ru'));
-
-const Add = (props) => {
+const Add = () => {
   const { t } = useTranslation();
-  const { socket } = useApi();
-  const { onHide } = props;
-  const { loadingStatus } = useSelector((state) => state.ui);
-  const channels = useSelector(channelsSelectors.selectAll);
-  const inputElement = useRef();
+  const api = useApi();
   const dispatch = useDispatch();
+  const inputElement = useRef();
+  const setCloseModal = () => dispatch(closeModal());
+  const channels = useSelector(channelsSelectors.selectAll);
+  const channelNames = channels.map((channel) => channel.name);
+  const { loadingStatus } = useSelector((state) => state.ui);
 
   useEffect(() => {
     inputElement.current.focus();
@@ -34,17 +32,7 @@ const Add = (props) => {
       .required(t('yup.errors.required'))
       .min(3, t('yup.errors.channelNameLength'))
       .max(20, t('yup.errors.channelNameLength'))
-      .test(
-        'uniqName',
-        t('yup.errors.uniqName'),
-        function (value) {
-          const { path, createError } = this;
-
-          return !channels.some(({ name }) => name === value)
-            ? true
-            : createError({ path, message: t('yup.errors.uniqName') });
-        },
-      ),
+      .notOneOf(channelNames, t('yup.errors.uniqName')),
   });
 
   const formik = useFormik({
@@ -54,19 +42,14 @@ const Add = (props) => {
     validationSchema,
     validateOnChange: false,
     onSubmit: ({ name }) => {
-      dispatch(setLoadingStatus('loading'));
-
-      const cleanName = filter.clean(name);
-
-      socket.emit('newChannel', { name: cleanName }, (response) => {
-        const { data } = response;
-        dispatch(channelsActions.addChannel(data));
-        dispatch(setCurrentChannelId(data.id));
-        dispatch(setLoadingStatus('idle'));
+      try {
+        const data = api.createChannel({ name, changeable: true });
+        dispatch(actions.setCurrentChannel(data.id));
+        setCloseModal();
         toast.success(t('socketMessages.successfulChannelCreation'));
-      });
-
-      onHide();
+      } catch (error) {
+        toast.error(t('socketMessages.failedDataLoading'));
+      }
     },
   });
 
@@ -75,11 +58,10 @@ const Add = (props) => {
   });
 
   return (
-    <Modal centered show onHide={onHide}>
+    <Modal centered show onHide={setCloseModal}>
       <Modal.Header closeButton>
-        <Modal.Title>{t('title.add')}</Modal.Title>
+        <Modal.Title>{t('add.title')}</Modal.Title>
       </Modal.Header>
-
       <Modal.Body>
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
@@ -92,12 +74,12 @@ const Add = (props) => {
               onChange={formik.handleChange}
               value={formik.values.name}
               data-testid="input-body"
-              disabled={loadingStatus === 'loading'}
+              isInvalid={formik.touched.name && formik.errors.name}
             />
-            <Form.Label className="visually-hidden" htmlFor="name">Имя канала</Form.Label>
+            <Form.Label className="visually-hidden" htmlFor="name">{t('add.label')}</Form.Label>
             <div className="invalid-feedback">{formik.errors.name}</div>
             <div className="d-flex justify-content-end">
-              <Button onClick={onHide} variant="secondary" className="me-2">
+              <Button onClick={setCloseModal} variant="secondary" className="me-2">
                 {t('add.cancelButton')}
               </Button>
               <Button disabled={loadingStatus === 'loading'} type="submit">{t('add.submitButton')}</Button>

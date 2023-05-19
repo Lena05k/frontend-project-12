@@ -1,47 +1,46 @@
 import React from 'react';
 import {
-  Modal, Button,
+  Modal, Button, Form,
 } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useApi } from '../hooks';
-import { actions as channelsActions } from '../slices/channelsSlice';
-import { setLoadingStatus, setCurrentChannelId } from '../slices/userInterfaceSlice';
+import { useApi } from '../../hooks';
+import { closeModal } from '../../slices/modalSlice';
 
-const Remove = (props) => {
+const Remove = () => {
   const { t } = useTranslation();
-  const { socket } = useApi();
+  const api = useApi();
   const dispatch = useDispatch();
+  const removeId = useSelector(({ modalsSlice }) => modalsSlice.id);
+  const setCloseModal = () => dispatch(closeModal());
 
-  const { defaultChannelId } = useSelector((state) => state.ui);
-  const { loadingStatus } = useSelector((state) => state.ui);
-  const { onHide, modalInfo: { item } } = props;
-
-  const onClickDeleteBtn = () => {
-    dispatch(setLoadingStatus('loading'));
-    socket.emit('removeChannel', { id: item.id }, () => {
-      dispatch(setCurrentChannelId(defaultChannelId));
-      dispatch(channelsActions.removeChannel(item.id));
-      dispatch(setLoadingStatus('idle'));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.removeChannel({ removeId });
       toast.success(t('socketMessages.successfulChannelRemove'));
-    });
-    onHide();
+      setCloseModal();
+    } catch (error) {
+      toast.error(t('socketMessages.successfulChannelCreation'));
+    }
   };
 
   return (
-    <Modal centered show onHide={onHide}>
+    <Modal centered show onHide={setCloseModal}>
       <Modal.Header closeButton>
         <Modal.Title>{t('remove.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p className="lead">{t('remove.confirm')}</p>
-        <div className="d-flex justify-content-end">
-          <Button onClick={onHide} variant="secondary" className="me-2">
-            {t('remove.cancelButton')}
-          </Button>
-          <Button onClick={onClickDeleteBtn} variant="danger" disabled={loadingStatus === 'loading'}>{t('buttonNames.delete')}</Button>
-        </div>
+        <Form onSubmit={handleSubmit}>
+          <p className="lead">{t('remove.confirm')}</p>
+          <div className="d-flex justify-content-end">
+            <Button onClick={setCloseModal} variant="secondary" className="me-2">
+              {t('remove.cancelButton')}
+            </Button>
+            <Button type="submit" variant="danger">{t('buttonNames.delete')}</Button>
+          </div>
+        </Form>
       </Modal.Body>
     </Modal>
   );

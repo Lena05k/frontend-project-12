@@ -9,21 +9,20 @@ import * as yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import filter from 'leo-profanity';
-import { selectors as channelsSelectors, actions as channelsActions } from '../slices/channelsSlice';
-import { setLoadingStatus } from '../slices/userInterfaceSlice';
-import { useApi } from '../hooks';
+import { useApi } from '../../hooks';
+import { closeModal } from '../../slices/modalSlice';
+import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 
-// filter.add(filter.getDictionary('ru'));
-
-const Rename = (props) => {
+const Rename = () => {
   const { t } = useTranslation();
-  const { socket } = useApi();
+  const api = useApi();
   const dispatch = useDispatch();
-  const { loadingStatus } = useSelector((state) => state.ui);
-  const { onHide, modalInfo: { item } } = props;
-  const channels = useSelector(channelsSelectors.selectAll);
   const inputElement = useRef();
+  const setCloseModal = () => dispatch(closeModal());
+  const channels = useSelector(channelsSelectors.selectAll);
+  const currentRenameId = useSelector(({ modalsSlice }) => modalsSlice.id);
+  const [currentChannel] = channels.filter((channel) => channel.id === currentRenameId);
+  const channelNames = channels.map((channel) => channel.name);
 
   useEffect(() => {
     inputElement.current.focus();
@@ -34,38 +33,23 @@ const Rename = (props) => {
       .required(t('yup.errors.required'))
       .min(3, t('yup.errors.channelNameLength'))
       .max(20, t('yup.errors.channelNameLength'))
-      .test(
-        'uniqName',
-        t('yup.errors.uniqName'),
-        function (value) {
-          const { path, createError } = this;
-
-          return !channels.some(({ name }) => name === value)
-            ? true
-            : createError({ path, message: t('yup.errors.uniqName') });
-        },
-      ),
+      .notOneOf(channelNames, t('yup.errors.uniqName')),
   });
 
   const formik = useFormik({
     initialValues: {
-      name: '',
+      name: currentChannel.name,
     },
     validationSchema,
     validateOnChange: false,
-    onSubmit: ({ name }) => {
-      dispatch(setLoadingStatus('loading'));
-
-      const cleanName = filter.clean(name);
-
-      const payload = { id: item.id, name: cleanName, removable: true };
-
-      socket.emit('renameChannel', payload, () => {
-        dispatch(channelsActions.setChannel(payload));
+    onSubmit: async ({ name }) => {
+      try {
+        await api.renameChannel({ id: currentRenameId, name });
         toast.success(t('socketMessages.successfulChannelRename'));
-        dispatch(setLoadingStatus('idle'));
-      });
-      onHide();
+        setCloseModal();
+      } catch (err) {
+        toast.error(t('yup.errors.networkError'));
+      }
     },
   });
 
@@ -74,7 +58,7 @@ const Rename = (props) => {
   });
 
   return (
-    <Modal centered show onHide={onHide}>
+    <Modal centered show onHide={setCloseModal}>
       <Modal.Header closeButton>
         <Modal.Title>{t('rename.title')}</Modal.Title>
       </Modal.Header>
@@ -90,13 +74,12 @@ const Rename = (props) => {
               onChange={formik.handleChange}
               value={formik.values.name}
               data-testid="input-body"
-              disabled={loadingStatus === 'loading'}
             />
             <Form.Label className="visually-hidden" htmlFor="name">{t('rename.label')}</Form.Label>
             <div className="invalid-feedback">{formik.errors.name}</div>
             <div className="d-flex justify-content-end">
-              <Button onClick={onHide} variant="secondary" className="me-2">{t('rename.cancelButton')}</Button>
-              <Button disabled={!formik.values.name || loadingStatus === 'loading'} type="submit">{t('rename.submitButton')}</Button>
+              <Button onClick={setCloseModal} variant="secondary" className="me-2">{t('rename.cancelButton')}</Button>
+              <Button type="submit" variant="primary">{t('rename.submitButton')}</Button>
             </div>
           </FormGroup>
         </form>
