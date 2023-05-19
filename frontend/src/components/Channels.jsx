@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { selectors as channelsSelectors } from '../slices/channelsSlice';
 import { ReactComponent as PlusIcon } from '../assets/plus-icon.svg';
 import Channel from './Channel';
-import getModal from '../modals/index.js';
+import getModal from './modals/index.js';
 
 const renderChannel = ({ channel, showModal }) => (
   <Channel key={channel.id} channel={channel} showModal={showModal} />
