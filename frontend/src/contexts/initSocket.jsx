@@ -1,7 +1,7 @@
-import store from '../slices';
+import { useMemo } from 'react';
 import { actions as messagesActions } from '../slices/messagesSlice';
 import { actions as channelsActions } from '../slices/channelsSlice';
-import {ApiContext} from "./index";
+import { ApiContext } from './index';
 
 const promosifySocket = (socket, type, data) => new Promise((resolve, reject) => {
   socket.emit(type, data, (err, response) => {
@@ -12,7 +12,7 @@ const promosifySocket = (socket, type, data) => new Promise((resolve, reject) =>
   });
 });
 
-const SocketConfigure = ({ socket, children }) => {
+const InitSocket = ({ socket, store, children }) => {
   const sendMessage = (message) => promosifySocket(socket, 'newMessage', message);
   const createChannel = (channel) => promosifySocket(socket, 'newChannel', channel);
   const removeChannel = (channelId) => promosifySocket(socket, 'removeChannel', channelId);
@@ -34,12 +34,12 @@ const SocketConfigure = ({ socket, children }) => {
     store.dispatch(channelsActions.setChannel(payload));
   });
 
-  const api = {
+  const api = useMemo(() => ({
     sendMessage,
     createChannel,
     removeChannel,
     renameChannel,
-  }
+  }), [sendMessage, createChannel, removeChannel, renameChannel]);
 
   return (
     <ApiContext.Provider value={api}>
@@ -48,4 +48,4 @@ const SocketConfigure = ({ socket, children }) => {
   );
 };
 
-export default SocketConfigure;
+export default InitSocket;
