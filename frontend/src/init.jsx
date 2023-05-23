@@ -6,20 +6,10 @@ import { initReactI18next } from 'react-i18next';
 import filter from 'leo-profanity';
 import ru from './locales/ru';
 import App from './components/App';
-import { ApiContext } from './contexts/index';
 import store from './slices/index.js';
 import AuthProvider from './contexts/AuthProvider';
-import socketConfigure from './contexts/socketConfigure';
+import InitSocket from './contexts/initSocket';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-const ApiProvider = ({ socket, children }) => {
-  const api = socketConfigure(socket);
-  return (
-    <ApiContext.Provider value={api}>
-      {children}
-    </ApiContext.Provider>
-  );
-};
 
 const initChat = async (socket) => {
   const rollbarConfig = {
@@ -42,18 +32,18 @@ const initChat = async (socket) => {
   filter.add(filter.getDictionary('ru'));
 
   return (
-    <Provider store={store}>
-      <RollbarProvider config={rollbarConfig}>
-        <ErrorBoundary>
-          <ApiProvider socket={socket}>
+    <RollbarProvider config={rollbarConfig}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <InitSocket socket={socket}>
             <AuthProvider>
               <App />
             </AuthProvider>
-          </ApiProvider>
-          <ToastContainer />
-        </ErrorBoundary>
-      </RollbarProvider>
-    </Provider>
+          </InitSocket>
+        </Provider>
+        <ToastContainer />
+      </ErrorBoundary>
+    </RollbarProvider>
   );
 };
 
