@@ -1,6 +1,7 @@
 import store from '../slices';
 import { actions as messagesActions } from '../slices/messagesSlice';
 import { actions as channelsActions } from '../slices/channelsSlice';
+import {ApiContext} from "./index";
 
 const promosifySocket = (socket, type, data) => new Promise((resolve, reject) => {
   socket.emit(type, data, (err, response) => {
@@ -11,7 +12,7 @@ const promosifySocket = (socket, type, data) => new Promise((resolve, reject) =>
   });
 });
 
-const socketConfigure = (socket) => {
+const SocketConfigure = ({ socket, children }) => {
   const sendMessage = (message) => promosifySocket(socket, 'newMessage', message);
   const createChannel = (channel) => promosifySocket(socket, 'newChannel', channel);
   const removeChannel = (channelId) => promosifySocket(socket, 'removeChannel', channelId);
@@ -33,12 +34,18 @@ const socketConfigure = (socket) => {
     store.dispatch(channelsActions.setChannel(payload));
   });
 
-  return {
+  const api = {
     sendMessage,
     createChannel,
     removeChannel,
     renameChannel,
-  };
+  }
+
+  return (
+    <ApiContext.Provider value={api}>
+      {children}
+    </ApiContext.Provider>
+  );
 };
 
-export default socketConfigure;
+export default SocketConfigure;

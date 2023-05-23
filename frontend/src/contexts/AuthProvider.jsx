@@ -3,27 +3,25 @@ import { useDispatch } from 'react-redux';
 import fetchInitialData from '../slices/fetchInitialData';
 import { AuthContext } from '.';
 
-const { authToken } = window.localStorage;
-
 const AuthContextProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const [loggedIn, setLoggedIn] = useState(!!authToken);
+  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('authToken'));
+
+  const logIn = (data, username) => {
+    const { token } = data;
+    dispatch(fetchInitialData(token));
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userName', username);
+    setLoggedIn(true);
+  };
 
   const logOut = () => {
-    localStorage.clear();
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
     setLoggedIn(false);
   };
 
-  const memorizedValue = useMemo(() => {
-    const logIn = (data, username) => {
-      const { token } = data;
-      dispatch(fetchInitialData(token));
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('userName', username);
-      setLoggedIn(true);
-    };
-    return { loggedIn, logIn, logOut };
-  }, [loggedIn, dispatch]);
+  const memorizedValue = useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn]);
 
   return (
     <AuthContext.Provider value={memorizedValue}>
