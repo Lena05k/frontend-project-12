@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import fetchInitialData from '../slices/fetchInitialData';
 import { AuthContext } from '.';
 
 const AuthContextProvider = ({ children }) => {
