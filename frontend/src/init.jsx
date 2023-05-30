@@ -35,11 +35,11 @@ const initChat = async (socket) => {
     <RollbarProvider config={rollbarConfig}>
       <ErrorBoundary>
         <Provider store={store}>
-          <InitSocket socket={socket}>
+          {/*<InitSocket socket={socket}>*/}
             <AuthProvider>
               <App />
             </AuthProvider>
-          </InitSocket>
+          {/*</InitSocket>*/}
         </Provider>
         <ToastContainer />
       </ErrorBoundary>
