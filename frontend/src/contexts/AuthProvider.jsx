@@ -9,7 +9,6 @@ const AuthContextProvider = ({ children }) => {
 
   const logIn = (data, username) => {
     const { token } = data;
-    dispatch(fetchInitialData(token));
     localStorage.setItem('authToken', token);
     localStorage.setItem('userName', username);
     setLoggedIn(true);
