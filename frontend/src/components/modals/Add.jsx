@@ -1,4 +1,3 @@
-/* eslint func-names: 0, prefer-arrow-callback: 0, functional/no-this-expression: 0 */
 import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import {
