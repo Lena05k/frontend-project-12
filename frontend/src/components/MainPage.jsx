@@ -18,7 +18,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const { logOut } = useContext(AuthContext);
 
-  const { currentChannelId: initialChannelId, loadingStatus } = useSelector((state) => state.ui);
+  const { currentChannelId: loadingStatus } = useSelector((state) => state.ui);
 
   useEffect(() => {
     if (loadingStatus === 'failed') {
@@ -29,21 +29,19 @@ const MainPage = () => {
     }
   }, [dispatch, navigate, loadingStatus, t, logOut]);
 
-  return initialChannelId
-    ? (
-      <div className="container h-100 my-4 overflow-hidden rounded shadow">
-        <div className="row h-100 bg-white flex-md-row">
-          <Channels />
-          <div className="col p-0 h-100">
-            <div className="d-flex flex-column h-100">
-              <Messages />
-              <MessageForm />
-            </div>
+  return (
+    <div className="container h-100 my-4 overflow-hidden rounded shadow">
+      <div className="row h-100 bg-white flex-md-row">
+        <Channels />
+        <div className="col p-0 h-100">
+          <div className="d-flex flex-column h-100">
+            <Messages />
+            <MessageForm />
           </div>
         </div>
       </div>
-    )
-    : null;
+    </div>
+  );
 };
 
 export default MainPage;
