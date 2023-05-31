@@ -8,26 +8,19 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-// import { Provider as ErrorBoundary } from '@rollbar/react';
 import { toast, ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../index.css';
-import 'react-toastify/dist/ReactToastify.css';
 import routes from '../routes';
 import Header from './Header';
 import MainPage from './MainPage';
 import Login from './LoginPage';
 import ErrorPage from './ErrorPage';
 import { useAuth } from '../hooks';
-import { setError } from '../slices/userInterfaceSlice';
 import SignUp from './SignUpPage';
-
-// const ErrorDisplay = ({ error }) => (
-//   <div className="container m-4 text-center">
-//     {error.message}
-//   </div>
-// );
+import { setError } from '../slices/userInterfaceSlice';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../index.css';
 
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
@@ -41,7 +34,7 @@ const PrivateRoute = ({ children }) => {
 const App = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { authToken: token } = window.localStorage;
+  // const { authToken: token } = window.localStorage;
   const { error } = useSelector((state) => state.ui);
 
   useEffect(() => {
@@ -55,21 +48,21 @@ const App = () => {
     <Router>
       <div className="d-flex flex-column h-100">
         <Header />
-          <Routes>
-            <Route path={routes.root()} errorElement={<ErrorPage />}>
-              <Route
-                index
-                element={(
-                  <PrivateRoute>
-                    <MainPage />
-                  </PrivateRoute>
-                )}
-              />
-              <Route path={routes.login()} element={<Login />} />
-              <Route path={routes.signup()} element={<SignUp />} />
-              <Route path={routes.notFound()} element={<ErrorPage />} />
-            </Route>
-          </Routes>
+        <Routes>
+          <Route path={routes.root()} errorElement={<ErrorPage />}>
+            <Route
+              index
+              element={(
+                <PrivateRoute>
+                  <MainPage />
+                </PrivateRoute>
+              )}
+            />
+            <Route path={routes.login()} element={<Login />} />
+            <Route path={routes.signup()} element={<SignUp />} />
+            <Route path={routes.notFound()} element={<ErrorPage />} />
+          </Route>
+        </Routes>
         <ToastContainer />
       </div>
     </Router>
