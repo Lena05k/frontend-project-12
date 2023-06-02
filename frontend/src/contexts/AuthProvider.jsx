@@ -1,29 +1,42 @@
 import { useState, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { AuthContext } from '.';
 
 const AuthContextProvider = ({ children }) => {
-  const dispatch = useDispatch();
-  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('authToken'));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
-  const logIn = (data, username) => {
+  const logIn = (data) => {
     const { token } = data;
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('userName', username);
-    setLoggedIn(true);
+    localStorage.setItem('user', token);
+    // localStorage.setItem('userName', username);
+    setUser(true);
   };
 
   const logOut = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userName');
-    setLoggedIn(false);
+    localStorage.removeItem('user');
+    // localStorage.removeItem('userName');
+    setUser(false);
   };
 
-  const memorizedValue = useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn]);
+  const getAuthHeader = () => {
+    const token = localStorage.getItem('user');
+    if (token) {
+      return {
+        Authorization: `Bearer ${token}`,
+      };
+    }
+    return {};
+  };
+
+  const memorizedValue = useMemo(() => ({
+    user,
+    logIn,
+    logOut,
+    getAuthHeader,
+  }), [user]);
 
   return (
     <AuthContext.Provider value={memorizedValue}>
-      {children}
+      { children }
     </AuthContext.Provider>
   );
 };
