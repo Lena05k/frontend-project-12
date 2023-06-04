@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { useApi } from '../hooks';
-import { setLoadingStatus } from '../slices/userInterfaceSlice';
+import { useAuth } from '../hooks';
 import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 
 const MessageForm = () => {
@@ -13,7 +13,9 @@ const MessageForm = () => {
   const { sendMessage } = useApi();
   const dispatch = useDispatch();
   const inputRef = useRef();
-  const { currentChannelId: channelId, loadingStatus } = useSelector((state) => state.ui);
+  const { username } = useAuth();
+  console.log(username);
+  const { currentChannelId } = useSelector((state) => state.channels);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -26,21 +28,18 @@ const MessageForm = () => {
     onSubmit: async (values, { resetForm }) => {
       const { message: unfilteredMessage } = values;
       const body = filter.clean(unfilteredMessage);
-      const username = localStorage.getItem('userName');
 
       const message = {
         body,
-        channelId,
+        currentChannelId,
         username,
       };
 
       sendMessage(message, (response) => {
         if (response.status === 'ok') {
           formik.resetForm();
-          dispatch(setLoadingStatus('loading'));
         } else {
           toast.error(t('yup.errors.networkError'));
-          dispatch(setLoadingStatus('idle'));
         }
       });
 
@@ -60,10 +59,10 @@ const MessageForm = () => {
             className="border-0 p-0 ps-2 form-control"
             onChange={formik.handleChange}
             value={formik.values.message}
-            disabled={loadingStatus === 'loading'}
+            disabled={formik.isSubmitting}
             ref={inputRef}
           />
-          <button type="submit" disabled={!formik.values.message || loadingStatus === 'loading'} className="btn btn-group-vertical border-0">
+          <button type="submit" disabled={!formik.values.message || formik.isSubmitting} className="btn btn-group-vertical border-0">
             <span className="visually-hidden">{t('buttonNames.send')}</span>
             <img src={ArrowRightIcon} alt="arrow right icon" />
           </button>

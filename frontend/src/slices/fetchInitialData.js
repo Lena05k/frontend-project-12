@@ -4,7 +4,8 @@ import routes from '../routes';
 
 const fetchInitialData = createAsyncThunk(
   'fetchInitialData',
-  async (token) => {
+  async () => {
+    const token = localStorage.getItem('authToken');
     const response = await axios.get(
       routes.apiDataPath(),
       {

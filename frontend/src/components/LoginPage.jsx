@@ -35,7 +35,7 @@ const Login = () => {
 
       return axios.post(routes.apiLoginPath(), { username, password })
         .then((response) => {
-          auth.logIn(response.data, username);
+          auth.logIn(response.data);
           navigate('/');
         })
         .catch((e) => {

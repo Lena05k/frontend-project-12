@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import {
   BrowserRouter as Router,
   Routes,
@@ -16,7 +16,6 @@ import Login from './LoginPage';
 import ErrorPage from './ErrorPage';
 import { useAuth } from '../hooks';
 import SignUp from './SignUpPage';
-import { setError } from '../slices/userInterfaceSlice';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
@@ -26,22 +25,13 @@ const PrivateRoute = ({ children }) => {
   const location = useLocation();
 
   return (
-    auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
+    auth.user ? children : <Navigate to="/login" state={{ from: location }} />
   );
 };
 
 const App = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  // const { authToken: token } = window.localStorage;
-  const { error } = useSelector((state) => state.ui);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(`${t('yup.errors.renderError')}: ${error.message}`);
-      dispatch(setError(null));
-    }
-  }, []);
 
   return (
     <Router>

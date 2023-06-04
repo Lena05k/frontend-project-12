@@ -5,6 +5,7 @@ import {
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Form, Button, Card } from 'react-bootstrap';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -12,7 +13,6 @@ import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { useAuth } from '../hooks';
-import { setLoadingStatus } from '../slices/userInterfaceSlice';
 import routes from '../routes';
 import signUpImage from '../assets/avatar_1.jpg';
 
@@ -24,7 +24,7 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const [signUpError, setSignUpError] = useState('');
-  const { loadingStatus } = useSelector((state) => state.ui);
+  const { loadingStatus } = useSelector((state) => state);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -54,29 +54,24 @@ const SignUp = () => {
     onSubmit: async (values) => {
       setSignUpError('');
       const { username, password } = values;
-      dispatch(setLoadingStatus('loading'));
-
-      axios.post(routes.apiSignupPath(), { username, password }).then((response) => {
-        dispatch(setLoadingStatus('idle'));
-        auth.logIn(response.data, username);
-        navigate('/');
-      })
-        .catch((e) => {
-          dispatch(setLoadingStatus('failed'));
+      axios.post(routes.apiSignupPath(), { username, password })
+        .then((response) => {
+          auth.logIn(response.data);
+          navigate('/');
+        })
+        .catch((error) => {
           formik.setSubmitting(false);
           inputRef.current.select();
 
-          if (e.message === 'Request failed with status code 409') {
-            setSignUpError(t('yup.errors.userAlreadyExists'));
-            return;
+          if (error.response && error.response.status === 409) {
+            toast.error(t('yup.errors.userAlreadyExists'));
           }
 
-          if (e.message === 'Network Error') {
-            setSignUpError(t('yup.errors.networkError'));
-            return;
+          if (error.message === 'Network Error') {
+            toast.error(t('yup.errors.networkError'));
           }
 
-          setSignUpError(t('yup.errors.requestError'));
+          toast.error(t('yup.errors.requestError'));
         });
     },
   });
@@ -114,6 +109,7 @@ const SignUp = () => {
                     onChange={formik.handleChange}
                     value={formik.values.username}
                     ref={inputRef}
+                    disabled={formik.isSubmitting}
                     noValidate
                   />
                   <Form.Label htmlFor="username">{t('forms.signup.userName')}</Form.Label>
@@ -130,6 +126,7 @@ const SignUp = () => {
                     placeholder={t('forms.signup.password')}
                     className={passwordFieldClass}
                     onChange={formik.handleChange}
+                    disabled={formik.isSubmitting}
                     noValidate
                   />
                   <Form.Label htmlFor="password">{t('forms.signup.password')}</Form.Label>
@@ -145,6 +142,7 @@ const SignUp = () => {
                     placeholder={t('forms.signup.retypePassword')}
                     className={retypePasswordFieldClass}
                     onChange={formik.handleChange}
+                    disabled={formik.isSubmitting}
                     noValidate
                   />
                   <Form.Label htmlFor="retypePassword">{t('forms.signup.retypePassword')}</Form.Label>
@@ -155,7 +153,7 @@ const SignUp = () => {
                     {signUpError}
                   </Form.Text>
                 </Form.Group>
-                <Button variant="outline-primary" disabled={loadingStatus === 'loading'} className="w-100 mb-3" type="submit">
+                <Button variant="outline-primary" disabled={formik.isSubmitting} className="w-100 mb-3" type="submit">
                   {t('buttonNames.signup')}
                 </Button>
               </Form>

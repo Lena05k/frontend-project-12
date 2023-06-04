@@ -5,16 +5,17 @@ import { useTranslation } from 'react-i18next';
 import {
   Button, ButtonGroup, Dropdown,
 } from 'react-bootstrap';
-import { setCurrentChannelId } from '../slices/userInterfaceSlice';
+import { actions } from '../slices/channelsSlice';
 
 const Channel = ({ channel, showModal }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { currentChannelId } = useSelector((state) => state.ui);
+  const { setCurrentChannelId } = actions;
+  const { currentChannelId } = useSelector((state) => state.channels);
   const { id, name, removable } = channel;
 
   const onClick = () => {
-    dispatch(setCurrentChannelId(id));
+    dispatch(actions.setCurrentChannelId(id));
   };
 
   const btnVariant = id === currentChannelId ? 'secondary' : 'light';
@@ -34,8 +35,8 @@ const Channel = ({ channel, showModal }) => {
           <span className="visually-hidden">{t('buttonNames.channelManagement')}</span>
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item onClick={() => showModal('removing', channel)} eventKey="1">{t('buttonNames.delete')}</Dropdown.Item>
-          <Dropdown.Item onClick={() => showModal('renaming', channel)} eventKey="2">{t('buttonNames.rename')}</Dropdown.Item>
+          <Dropdown.Item onClick={() => showModal('removeChannel', channel)} eventKey="1">{t('buttonNames.delete')}</Dropdown.Item>
+          <Dropdown.Item onClick={() => showModal('renameChannel', channel)} eventKey="2">{t('buttonNames.rename')}</Dropdown.Item>
         </Dropdown.Menu>
       </>
 

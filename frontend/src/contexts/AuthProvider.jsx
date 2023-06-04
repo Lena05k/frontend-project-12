@@ -1,27 +1,26 @@
-import { useState, useMemo } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import { AuthContext } from '.';
 
 const AuthContextProvider = ({ children }) => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const currentUser = JSON.parse(localStorage.getItem('user')) ?? null;
+  const [user, setUser] = useState(currentUser);
 
-  const logIn = (data) => {
-    const { token } = data;
-    localStorage.setItem('user', token);
-    // localStorage.setItem('userName', username);
-    setUser(true);
-  };
+  const logIn = useCallback((userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, []);
 
-  const logOut = () => {
+  const logOut = useCallback(() => {
     localStorage.removeItem('user');
     // localStorage.removeItem('userName');
-    setUser(false);
-  };
+    setUser(null);
+  }, []);
 
   const getAuthHeader = () => {
     const token = localStorage.getItem('user');
     if (token) {
       return {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${user.token}`,
       };
     }
     return {};
@@ -32,7 +31,7 @@ const AuthContextProvider = ({ children }) => {
     logIn,
     logOut,
     getAuthHeader,
-  }), [user]);
+  }), [user, logIn, logOut]);
 
   return (
     <AuthContext.Provider value={memorizedValue}>

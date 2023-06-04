@@ -1,33 +1,44 @@
-import {
-  useEffect, useContext,
-} from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { useAuth } from '../hooks';
+import routes from '../routes';
 import Channels from './Channels';
 import Messages from './Messages';
-import { setLoadingStatus } from '../slices/userInterfaceSlice';
+import fetchInitialData from '../slices/fetchInitialData';
+import { actions } from '../slices/channelsSlice';
+import { addMessages } from '../slices/messagesSlice';
 import { AuthContext } from '../contexts';
 
 import MessageForm from './MessageForm';
 
 const MainPage = () => {
   const { t } = useTranslation();
+  const auth = useAuth();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { logOut } = useContext(AuthContext);
-
-  const { currentChannelId: loadingStatus } = useSelector((state) => state.ui);
+  const headers = auth.getAuthHeader();
+  const { addChannels, setCurrentChannelId } = actions;
 
   useEffect(() => {
-    if (loadingStatus === 'failed') {
-      toast.error(t('socketMessages.failedDataLoading'));
-      dispatch(setLoadingStatus('idle'));
-      logOut();
-      navigate('/login');
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(routes.apiDataPath(), { headers });
+        const { channels, messages, currentChannelId } = data || {};
+        dispatch(addChannels(channels));
+        dispatch(setCurrentChannelId(currentChannelId));
+        dispatch(addMessages(messages));
+      } catch (error) {
+        toast.error(t('socketMessages.failedDataLoading'));
+        console.error(error);
+      }
+    };
+    if (fetchInitialData) {
+      fetchData();
     }
-  }, [dispatch, navigate, loadingStatus, t, logOut]);
+  }, [dispatch, t, fetchInitialData]);
+
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">

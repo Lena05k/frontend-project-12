@@ -20,7 +20,6 @@ const Add = () => {
   const setCloseModal = () => dispatch(closeModal());
   const channels = useSelector(channelsSelectors.selectAll);
   const channelNames = channels.map((channel) => channel.name);
-  const { loadingStatus } = useSelector((state) => state.ui);
 
   useEffect(() => {
     inputElement.current.focus();
@@ -43,7 +42,7 @@ const Add = () => {
     onSubmit: ({ name }) => {
       try {
         const data = api.createChannel({ name, changeable: true });
-        dispatch(actions.setCurrentChannel(data.id));
+        dispatch(actions.setCurrentChannelId(data.id));
         setCloseModal();
         toast.success(t('socketMessages.successfulChannelCreation'));
       } catch (error) {
@@ -81,7 +80,7 @@ const Add = () => {
               <Button onClick={setCloseModal} variant="secondary" className="me-2">
                 {t('add.cancelButton')}
               </Button>
-              <Button disabled={loadingStatus === 'loading'} type="submit">{t('add.submitButton')}</Button>
+              <Button disabled={formik.isSubmitting} type="submit">{t('add.submitButton')}</Button>
             </div>
           </FormGroup>
         </form>

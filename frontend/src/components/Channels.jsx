@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { selectors as channelsSelectors } from '../slices/channelsSlice';
+import { selectors as channelsSelectors, actions } from '../slices/channelsSlice';
+import { showModal, closeModal } from '../slices/modalSlice';
 import { ReactComponent as PlusIcon } from '../assets/plus-icon.svg';
 import Channel from './Channel';
 import getModal from './modals/index.js';
@@ -11,22 +12,25 @@ const renderChannel = ({ channel, showModal }) => (
   <Channel key={channel.id} channel={channel} showModal={showModal} />
 );
 
-const renderModal = (({ modalInfo, hideModal }) => {
-  if (!modalInfo.type) {
-    return null;
-  }
+const renderModal = () => {
+  const { type }  = useSelector((state) => state.modals);
+  if (type === null) return null;
 
-  const Modal = getModal(modalInfo.type);
-  return <Modal modalInfo={modalInfo} onHide={hideModal} />;
-});
+  const Modal = getModal(type);
+  return <Modal />;
+};
 
-const Channels = () => {
+
+
+const Channels = (channel) => {
   const { t } = useTranslation();
-  const [modalInfo, setModalInfo] = useState({ type: null, item: null });
-  const hideModal = () => setModalInfo({ type: null, item: null });
-  const showModal = (type, item = null) => setModalInfo({ type, item });
-
+  const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectAll);
+  const handleClick = (id) => {
+    dispatch(actions.setCurrentChannelId(id));
+  };
+
+  const setShowModal = (type, item = null) => dispatch(showModal({ type, item }));
 
   return (
     <>
@@ -37,18 +41,17 @@ const Channels = () => {
             variant="primary"
             type="button"
             className="p-0 text-primary bg-light border-0 btn-group-vertical"
-            onClick={() => showModal('adding')}
+            onClick={() => setShowModal('addChannel')}
           >
             <PlusIcon className="bg-light m-1" />
             <span className="visually-hidden">+</span>
           </Button>
         </div>
         <ul className="nav flex-column nav-pills nav-fill px-2">
-          {channels.map((channel) => renderChannel({ channel, showModal }))}
+          {channels.map((channel) => renderChannel({ channel, setShowModal }))}
         </ul>
       </div>
-
-      {renderModal({ modalInfo, hideModal })}
+      {renderModal(() => dispatch(closeModal()))}
     </>
   );
 };

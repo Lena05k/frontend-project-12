@@ -1,5 +1,4 @@
 import { Provider } from 'react-redux';
-import { useMemo } from 'react';
 import { ToastContainer } from 'react-bootstrap';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import i18next from 'i18next';
@@ -10,7 +9,7 @@ import App from './components/App';
 import store from './slices/index.js';
 import AuthProvider from './contexts/AuthProvider';
 import { ApiContext } from './contexts/index';
-import { actions as messagesActions } from './slices/messagesSlice';
+import { addMessage } from './slices/messagesSlice';
 import { actions as channelsActions } from './slices/channelsSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -22,26 +21,6 @@ const promosifySocket = (socket, type, data) => new Promise((resolve, reject) =>
     resolve(response);
   });
 });
-
-const InitSocket = ({ socket, children }) => {
-  const sendMessage = (message) => promosifySocket(socket, 'newMessage', message);
-  const createChannel = (channel) => promosifySocket(socket, 'newChannel', channel);
-  const removeChannel = (channelId) => promosifySocket(socket, 'removeChannel', channelId);
-  const renameChannel = (channel) => promosifySocket(socket, 'renameChannel', channel);
-
-  const api = useMemo(() => ({
-    sendMessage,
-    createChannel,
-    removeChannel,
-    renameChannel,
-  }), [sendMessage, createChannel, removeChannel, renameChannel]);
-
-  return (
-    <ApiContext.Provider value={api}>
-      {children}
-    </ApiContext.Provider>
-  );
-};
 
 const initChat = async (socket) => {
   const rollbarConfig = {
@@ -62,7 +41,7 @@ const initChat = async (socket) => {
     });
 
   socket.on('newMessage', (payload) => {
-    store.dispatch(messagesActions.addMessage(payload));
+    store.dispatch(addMessage(payload));
   });
 
   socket.on('newChannel', (payload) => {
@@ -77,17 +56,29 @@ const initChat = async (socket) => {
     store.dispatch(channelsActions.setChannel(payload));
   });
 
+  const sendMessage = (message) => promosifySocket(socket, 'newMessage', message);
+  const createChannel = (channel) => promosifySocket(socket, 'newChannel', channel);
+  const removeChannel = (channelId) => promosifySocket(socket, 'removeChannel', channelId);
+  const renameChannel = (channel) => promosifySocket(socket, 'renameChannel', channel);
+
+  const api = {
+    sendMessage,
+    createChannel,
+    removeChannel,
+    renameChannel,
+  };
+
   filter.add(filter.getDictionary('ru'));
 
   return (
     <RollbarProvider config={rollbarConfig}>
       <ErrorBoundary>
         <Provider store={store}>
-          <InitSocket socket={socket}>
+          <ApiContext.Provider value={api}>
             <AuthProvider>
               <App />
             </AuthProvider>
-          </InitSocket>
+          </ApiContext.Provider>
         </Provider>
         <ToastContainer />
       </ErrorBoundary>
