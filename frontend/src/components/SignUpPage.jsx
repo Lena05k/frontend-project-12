@@ -20,11 +20,11 @@ const SignUp = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const inputRef = useRef();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [signUpError, setSignUpError] = useState('');
-  const { loadingStatus } = useSelector((state) => state);
+  // const { loadingStatus } = useSelector((state) => state);
 
   useEffect(() => {
     inputRef.current.focus();
