@@ -1,34 +1,27 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { selectors as channelsSelectors, actions } from '../slices/channelsSlice';
-import { showModal, closeModal } from '../slices/modalSlice';
-import { ReactComponent as PlusIcon } from '../assets/plus-icon.svg';
+import { selectors as channelsSelectors } from '../slices/channelsSlice';
+import { showModal } from '../slices/modalSlice';
 import Channel from './Channel';
-import getModal from './modals/index.js';
+// import getModal from './modals/index.js';
+import { ReactComponent as PlusIcon } from '../assets/plus-icon.svg';
 
 const renderChannel = ({ channel, showModal }) => (
   <Channel key={channel.id} channel={channel} showModal={showModal} />
 );
 
-const renderModal = () => {
-  const { type }  = useSelector((state) => state.modals);
-  if (type === null) return null;
+// const renderModal = () => {
+//   const { type } = useSelector((state) => state.modalsSlice);
+//   if (type === null) return null;
+//   const Modal = getModal(type);
+//   return <Modal />;
+// };
 
-  const Modal = getModal(type);
-  return <Modal />;
-};
-
-
-
-const Channels = (channel) => {
+const Channels = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectAll);
-  const handleClick = (id) => {
-    dispatch(actions.setCurrentChannelId(id));
-  };
 
   const setShowModal = (type, item = null) => dispatch(showModal({ type, item }));
 
@@ -51,7 +44,7 @@ const Channels = (channel) => {
           {channels.map((channel) => renderChannel({ channel, setShowModal }))}
         </ul>
       </div>
-      {renderModal(() => dispatch(closeModal()))}
+      {/*{renderModal(() => dispatch(closeModal()))}*/}
     </>
   );
 };
