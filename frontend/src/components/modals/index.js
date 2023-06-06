@@ -8,5 +8,5 @@ const modals = {
   renaming: Rename,
 };
 console.log('modals:', modals.adding);
-const getModal = (modalName) => console.log('modal:', modals[modalName]);
+const getModal = (modalName) => modals[modalName];
 export default getModal;
