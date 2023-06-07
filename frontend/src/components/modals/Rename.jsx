@@ -10,22 +10,24 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useApi } from '../../hooks';
 import { closeModal } from '../../slices/modalSlice';
-import { selectors as channelsSelectors } from '../../slices/channelsSlice';
+import {actions, selectors} from '../../slices/channelsSlice';
 
 const Rename = () => {
   const { t } = useTranslation();
   const api = useApi();
   const dispatch = useDispatch();
-  const inputElement = useRef();
   const setCloseModal = () => dispatch(closeModal());
-  const channels = useSelector(channelsSelectors.selectAll);
-  const currentRenameId = useSelector(({ modalsSlice }) => modalsSlice.id);
-  const [currentChannel] = channels.filter((channel) => channel.id === currentRenameId);
-  const channelNames = channels.map((channel) => channel.name);
+  const inputElement = useRef();
 
   useEffect(() => {
     inputElement.current.focus();
   }, []);
+
+
+  const channels = useSelector(selectors.selectAll);
+  const currentRenameId = useSelector(({ modalsSlice }) => modalsSlice.id);
+  const currentChannel = channels.filter((channel) => channel.id === currentRenameId);
+  const channelNames = channels.map((channel) => channel.name);
 
   const validationSchema = yup.object().shape({
     name: yup.string()
@@ -41,7 +43,8 @@ const Rename = () => {
     },
     validationSchema,
     validateOnChange: false,
-    onSubmit: async ({ name }) => {
+    onSubmit: async () => {
+      const { name } = formik.values;
       try {
         await api.renameChannel({ id: currentRenameId, name });
         toast.success(t('socketMessages.successfulChannelRename'));
