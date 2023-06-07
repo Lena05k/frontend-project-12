@@ -7,6 +7,6 @@ const modals = {
   removing: Remove,
   renaming: Rename,
 };
-console.log('modals:', modals.adding);
+
 const getModal = (modalName) => modals[modalName];
 export default getModal;
