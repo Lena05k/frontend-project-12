@@ -11,10 +11,11 @@ import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 const MessageForm = () => {
   const { t } = useTranslation();
   const { sendMessage } = useApi();
+  console.log('sendMessage', sendMessage);
   const dispatch = useDispatch();
   const inputRef = useRef();
   const { username } = useAuth();
-  console.log(username);
+  console.log('username useAuth():', username);
   const { currentChannelId } = useSelector((state) => state.channels);
 
   useEffect(() => {
