@@ -53,7 +53,7 @@ const initChat = async (socket) => {
   });
 
   socket.on('renameChannel', (payload) => {
-    store.dispatch(channelsActions.setChannel(payload));
+    store.dispatch(channelsActions.renameChannel(payload));
   });
 
   const sendMessage = (message) => promosifySocket(socket, 'newMessage', message);
