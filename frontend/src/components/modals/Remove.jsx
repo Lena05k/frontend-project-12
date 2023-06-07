@@ -13,6 +13,7 @@ const Remove = () => {
   const api = useApi();
   const dispatch = useDispatch();
   const removeId = useSelector(({ modalsSlice }) => modalsSlice.id);
+
   const setCloseModal = () => dispatch(closeModal());
 
   const handleSubmit = async (e) => {
@@ -22,7 +23,7 @@ const Remove = () => {
       toast.success(t('socketMessages.successfulChannelRemove'));
       setCloseModal();
     } catch (error) {
-      toast.error(t('socketMessages.successfulChannelCreation'));
+      toast.error(t('socketMessages.failedDataLoading'));
     }
   };
 
