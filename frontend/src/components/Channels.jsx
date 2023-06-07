@@ -4,19 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { selectors as channelsSelectors } from '../slices/channelsSlice';
 import { showModal } from '../slices/modalSlice';
 import Channel from './Channel';
-// import getModal from './modals/index.js';
+import Modal from './Modal.jsx';
 import { ReactComponent as PlusIcon } from '../assets/plus-icon.svg';
 
-const renderChannel = ({ channel, showModal }) => (
-  <Channel key={channel.id} channel={channel} showModal={showModal} />
+const renderChannel = ({ channel }) => (
+  <Channel key={channel.id} channel={channel} currentChannelId={channel.currentChannelId} />
 );
-
-// const renderModal = () => {
-//   const { type } = useSelector((state) => state.modalsSlice);
-//   if (type === null) return null;
-//   const Modal = getModal(type);
-//   return <Modal />;
-// };
 
 const Channels = () => {
   const { t } = useTranslation();
@@ -34,17 +27,17 @@ const Channels = () => {
             variant="primary"
             type="button"
             className="p-0 text-primary bg-light border-0 btn-group-vertical"
-            onClick={() => setShowModal('addChannel')}
+            onClick={() => setShowModal('adding')}
           >
             <PlusIcon className="bg-light m-1" />
             <span className="visually-hidden">+</span>
           </Button>
         </div>
         <ul className="nav flex-column nav-pills nav-fill px-2">
-          {channels.map((channel) => renderChannel({ channel, setShowModal }))}
+          {channels.map((channel) => renderChannel({ channel }))}
         </ul>
       </div>
-      {/*{renderModal(() => dispatch(closeModal()))}*/}
+      <Modal />
     </>
   );
 };
