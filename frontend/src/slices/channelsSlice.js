@@ -3,7 +3,9 @@ import fetchInitialData from './fetchInitialData';
 
 const channelsAdapter = createEntityAdapter();
 
-const initialState = channelsAdapter.getInitialState();
+const initialState = channelsAdapter.getInitialState({
+    currentChannelId: null,
+});
 
 export const channelsSlice = createSlice({
   name: 'channels',
@@ -12,7 +14,7 @@ export const channelsSlice = createSlice({
     addChannel: channelsAdapter.addOne,
     addChannels: channelsAdapter.addMany,
     removeChannel: channelsAdapter.removeOne,
-    setChannel: channelsAdapter.setOne,
+    renameChannel: channelsAdapter.setOne,
     setCurrentChannelId: (state, action) => {
       state.currentChannelId = action.payload;
     },
