@@ -5,18 +5,8 @@ import getModal from './modals/index';
 
 const Modal = () => {
   const { type } = useSelector((state) => state.modalsSlice);
-  const modalShow = !!type;
-
-  if (!type) {
-    return null;
-  }
-  const Component = getModal(type);
-  console.log('type:', type);
-
-  return (
-    <ModalComponent show={modalShow} centered>
-      <Component />
-    </ModalComponent>
-  );
+  if (type === null) return null;
+  const CurrentModal = getModal(type);
+  return <CurrentModal />;
 };
 export default Modal;
