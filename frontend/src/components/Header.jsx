@@ -7,7 +7,7 @@ import { AuthContext } from '../contexts';
 const Header = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { loggedIn, logOut } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
 
   const handleClick = () => {
     logOut();
@@ -18,7 +18,7 @@ const Header = () => {
     <Navbar className="shadow-sm bg-white" expand="lg">
       <Container>
         <Link className="navbar-brand" to="/">{t('titles.headerLogo')}</Link>
-        {loggedIn && <Button onClick={handleClick}>{t('buttonNames.logout')}</Button>}
+        {user && <Button onClick={handleClick}>{t('buttonNames.logout')}</Button>}
       </Container>
     </Navbar>
   );
