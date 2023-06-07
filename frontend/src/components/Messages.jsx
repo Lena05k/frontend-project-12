@@ -5,10 +5,10 @@ import { selectors as channelsSelectors } from '../slices/channelsSlice';
 
 const Messages = () => {
   const { currentChannelId } = useSelector((state) => state.channels);
-
+  console.log('Messages currentChannelId:', currentChannelId);
   const { name: channelName } = useSelector((state) => channelsSelectors
     .selectById(state, currentChannelId)) ?? '';
-
+  console.log('Messages name:', channelName);
   const messages = useSelector(messagesSelectors.selectAll)
     .filter(({ channelId }) => channelId === currentChannelId);
 
