@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useApi } from '../../hooks';
 import { closeModal } from '../../slices/modalSlice';
+import { actions } from '../../slices/channelsSlice';
 
 const Remove = () => {
   const { t } = useTranslation();
@@ -19,7 +20,8 @@ const Remove = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.removeChannel({ removeId });
+      const data = api.removeChannel(removeId);
+      dispatch(actions.setCurrentChannelId(data.id));
       toast.success(t('socketMessages.successfulChannelRemove'));
       setCloseModal();
     } catch (error) {
