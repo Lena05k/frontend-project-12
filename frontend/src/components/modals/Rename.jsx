@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useApi } from '../../hooks';
 import { closeModal } from '../../slices/modalSlice';
-import {actions, selectors} from '../../slices/channelsSlice';
+import { actions, selectors } from '../../slices/channelsSlice';
 
 const Rename = () => {
   const { t } = useTranslation();
@@ -22,7 +22,6 @@ const Rename = () => {
   useEffect(() => {
     inputElement.current.focus();
   }, []);
-
 
   const channels = useSelector(selectors.selectAll);
   const currentRenameId = useSelector(({ modalsSlice }) => modalsSlice.id);
@@ -43,10 +42,11 @@ const Rename = () => {
     },
     validationSchema,
     validateOnChange: false,
-    onSubmit: async () => {
+    onSubmit: () => {
       const { name } = formik.values;
       try {
-        await api.renameChannel({ id: currentRenameId, name });
+        const data = api.renameChannel({ id: currentRenameId, name });
+        dispatch(actions.setCurrentChannelId(data.id));
         toast.success(t('socketMessages.successfulChannelRename'));
         setCloseModal();
       } catch (err) {
