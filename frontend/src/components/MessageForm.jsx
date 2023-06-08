@@ -11,11 +11,10 @@ import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 const MessageForm = () => {
   const { t } = useTranslation();
   const { sendMessage } = useApi();
-  console.log('sendMessage', sendMessage);
   const dispatch = useDispatch();
   const inputRef = useRef();
-  const { username } = useAuth();
-  console.log('username useAuth():', username);
+  const { user } = useAuth();
+  // console.log('username useAuth():', username);
   const { currentChannelId } = useSelector((state) => state.channels);
 
   useEffect(() => {
@@ -33,8 +32,9 @@ const MessageForm = () => {
       const message = {
         body,
         currentChannelId,
-        username,
+        username: user.username,
       };
+      console.log('message', message);
 
       sendMessage(message, (response) => {
         if (response.status === 'ok') {
