@@ -25,7 +25,6 @@ const MainPage = () => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(routes.apiDataPath(), { headers });
-        // console.log('data main page:', data);
         const { channels, messages, currentChannelId } = data || {};
         dispatch(addChannels(channels));
         dispatch(setCurrentChannelId(currentChannelId));
