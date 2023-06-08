@@ -4,21 +4,24 @@ import { selectors as messagesSelectors } from '../slices/messagesSlice';
 import { selectors as channelsSelectors } from '../slices/channelsSlice';
 
 const Messages = () => {
+  const channels = useSelector(channelsSelectors.selectAll);
   const { currentChannelId } = useSelector((state) => state.channels);
-  console.log('Messages currentChannelId:', currentChannelId);
+  // const messages = useSelector((state) => state.messages);
+  const messages = useSelector(messagesSelectors.selectAll);
+  // console.log('Messages currentChannelId:', currentChannelId);
   const { name: channelName } = useSelector((state) => channelsSelectors
     .selectById(state, currentChannelId)) ?? '';
-  console.log('Messages name:', channelName);
-  const messages = useSelector(messagesSelectors.selectAll)
-    .filter(({ channelId }) => channelId === currentChannelId);
+  // console.log('Messages name:', channelName);
+  const currentMessages = messages.filter((message) => message.message === currentChannelId);
+  const [currentChannel] = channels.filter((channel) => channel.id === currentChannelId);
 
   const channelTitle = `# ${channelName}`;
 
   const messagesCountDisplay = `${messages.length} сообщений`;
 
-  const renderMessages = () => messages.map(({ id, body, username }) => (
+  const renderMessages = () => messages.map(({ id, body, user }) => (
     <div key={id} className="text-break mb-2">
-      <b>{username}</b>
+      <b>{user}</b>
       :
       {' '}
       {body}
