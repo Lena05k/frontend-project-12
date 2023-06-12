@@ -5,39 +5,47 @@ import { selectors as channelsSelectors } from '../slices/channelsSlice';
 
 const Messages = () => {
   const channels = useSelector(channelsSelectors.selectAll);
-  const { currentChannelId } = useSelector((state) => state.channels);
-  // const messages = useSelector((state) => state.messages);
   const messages = useSelector(messagesSelectors.selectAll);
-  // console.log('Messages currentChannelId:', currentChannelId);
-  const { name: channelName } = useSelector((state) => channelsSelectors
-    .selectById(state, currentChannelId)) ?? '';
-  // console.log('Messages name:', channelName);
-  const currentMessages = messages.filter((message) => message.message === currentChannelId);
+  const { currentChannelId } = useSelector((state) => state.channels);
   const [currentChannel] = channels.filter((channel) => channel.id === currentChannelId);
-
-  const channelTitle = `# ${channelName}`;
-
+  const [currentMessages] = messages.filter((message) => message.channelId === currentChannelId);
   const messagesCountDisplay = `${messages.length} сообщений`;
+  console.log('channels', channels);
+  console.log('currentChannelId', currentChannelId);
+  console.log('Current Channel', currentChannel);
+  console.log('messages', messages);
+  console.log('Current messages', currentMessages);
+  console.log('Messages Count Display', messagesCountDisplay);
 
-  const renderMessages = () => messages.map(({ id, body, user }) => (
-    <div key={id} className="text-break mb-2">
-      <b>{user}</b>
+  const createMessage = (message) => (
+    <div className="text-break mb-2">
+      <b>{message.user}</b>
       :
       {' '}
-      {body}
+      {message.body}
     </div>
-  ));
+  );
+
+  console.log('Create Message', createMessage);
 
   return (
     <>
       <div className="bg-light mb-4 p-3 shadow-sm small">
         <p className="m-0">
-          <b>{channelTitle}</b>
+          <b>
+            #
+            {' '}
+            {currentChannel?.name}
+          </b>
         </p>
         <span className="text-muted">{messagesCountDisplay}</span>
       </div>
       <div id="messages-box" className="chat-messages overflow-auto px-5 ">
-        {renderMessages()}
+        {currentMessages && currentMessages.map((message) => (
+          <div className="text-break mb-2" key={message.id}>
+            {createMessage(message)}
+          </div>
+        ))}
       </div>
     </>
   );

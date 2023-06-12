@@ -1,20 +1,17 @@
 import React, { useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import { useApi } from '../hooks';
-import { useAuth } from '../hooks';
+import { useApi, useAuth } from '../hooks';
 import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 
 const MessageForm = () => {
   const { t } = useTranslation();
-  const { sendMessage } = useApi();
-  const dispatch = useDispatch();
+  const { api } = useApi();
   const inputRef = useRef();
-  const { user } = useAuth();
-  // console.log('username useAuth():', username);
+  const { user: { username } } = useAuth();
   const { currentChannelId } = useSelector((state) => state.channels);
 
   useEffect(() => {
@@ -26,25 +23,20 @@ const MessageForm = () => {
       message: '',
     },
     onSubmit: async (values, { resetForm }) => {
-      const { message: unfilteredMessage } = values;
-      const body = filter.clean(unfilteredMessage);
-
+      const { messg } = values;
+      const body = filter.clean(messg);
       const message = {
-        body,
-        currentChannelId,
-        username: user.username,
+        body: body,
+        channelId: currentChannelId,
+        username,
+      }
+
+      try {
+        await api.addMessage({ message });
+        formik.resetForm();
+      } catch {
+        toast.error(t('yup.errors.networkError'));
       };
-      console.log('message', message);
-
-      sendMessage(message, (response) => {
-        if (response.status === 'ok') {
-          formik.resetForm();
-        } else {
-          toast.error(t('yup.errors.networkError'));
-        }
-      });
-
-      resetForm({ message: '' });
     },
   });
 
@@ -63,7 +55,7 @@ const MessageForm = () => {
             disabled={formik.isSubmitting}
             ref={inputRef}
           />
-          <button type="submit" disabled={!formik.values.message || formik.isSubmitting} className="btn btn-group-vertical border-0">
+          <button type="submit" disabled={formik.isSubmitting} className="btn btn-group-vertical border-0">
             <span className="visually-hidden">{t('buttonNames.send')}</span>
             <img src={ArrowRightIcon} alt="arrow right icon" />
           </button>
