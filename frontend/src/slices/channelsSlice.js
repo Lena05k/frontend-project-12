@@ -4,7 +4,7 @@ import fetchInitialData from './fetchInitialData';
 const channelsAdapter = createEntityAdapter();
 
 const initialState = channelsAdapter.getInitialState({
-    currentChannelId: null,
+  currentChannelId: null,
 });
 
 export const channelsSlice = createSlice({

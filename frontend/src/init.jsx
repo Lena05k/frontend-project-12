@@ -56,13 +56,13 @@ const initChat = async (socket) => {
     store.dispatch(channelsActions.renameChannel(payload));
   });
 
-  const sendMessage = (message) => promosifySocket(socket, 'newMessage', message);
+  const addNewMessage = (message) => promosifySocket(socket, 'newMessage', message);
   const createChannel = (channel) => promosifySocket(socket, 'newChannel', channel);
   const removeChannel = (channelId) => promosifySocket(socket, 'removeChannel', channelId);
   const renameChannel = (channel) => promosifySocket(socket, 'renameChannel', channel);
 
   const api = {
-    sendMessage,
+    addNewMessage,
     createChannel,
     removeChannel,
     renameChannel,

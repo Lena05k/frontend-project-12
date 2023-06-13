@@ -13,7 +13,7 @@ const Channel = ({ channel }) => {
   const dispatch = useDispatch();
   const { currentChannelId } = useSelector((state) => state.channels);
   const { id, name, removable } = channel;
-  console.log(channel);
+  // console.log(channel);
 
   const onClick = () => {
     dispatch(actions.setCurrentChannelId(id));
