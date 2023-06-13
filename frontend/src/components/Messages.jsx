@@ -10,13 +10,6 @@ const Messages = () => {
   const currentChannel = channels.find((channel) => channel.id === currentChannelId);
   const currentMessages = messages.filter((message) => message.channelId === currentChannelId);
 
-  // console.log('channels', channels);
-  // console.log('currentChannelId', currentChannelId);
-  // console.log('Current Channel', currentChannel);
-  // console.log('messages', messages);
-  // console.log('Current messages', currentMessages);
-  // console.log('Messages Count Display', messagesCountDisplay);
-
   const createMessage = (message) => (
     <div className="text-break mb-2">
       <b>{message.username}</b>
