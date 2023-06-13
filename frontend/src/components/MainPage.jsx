@@ -4,15 +4,13 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useAuth } from '../hooks';
-import routes from '../routes';
+import routes from '../routes.js';
 import MessageForm from './MessageForm';
 import Channels from './Channels';
 import Messages from './Messages';
 import fetchInitialData from '../slices/fetchInitialData';
 import { actions } from '../slices/channelsSlice';
 import { addMessages } from '../slices/messagesSlice';
-
-
 
 const MainPage = () => {
   const { t } = useTranslation();
