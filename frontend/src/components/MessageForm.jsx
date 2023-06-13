@@ -3,13 +3,13 @@ import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import filter from 'leo-profanity';
+import leoProfanity from 'leo-profanity';
 import { useApi, useAuth } from '../hooks';
 import ArrowRightIcon from '../assets/arrow-right-icon.svg';
 
 const MessageForm = () => {
   const { t } = useTranslation();
-  const { api } = useApi();
+  const api = useApi();
   const inputRef = useRef();
   const { user: { username } } = useAuth();
   const { currentChannelId } = useSelector((state) => state.channels);
@@ -23,20 +23,15 @@ const MessageForm = () => {
       message: '',
     },
     onSubmit: async (values, { resetForm }) => {
-      const { messg } = values;
-      const body = filter.clean(messg);
-      const message = {
-        body: body,
-        channelId: currentChannelId,
-        username,
-      }
+      const { message } = values;
+      const body = leoProfanity.clean(message);
 
       try {
-        await api.addMessage({ message });
-        formik.resetForm();
+        await api.addNewMessage({ body: body, channelId: currentChannelId, username });
+        resetForm();
       } catch {
         toast.error(t('yup.errors.networkError'));
-      };
+      }
     },
   });
 
