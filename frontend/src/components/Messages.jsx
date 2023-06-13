@@ -7,26 +7,26 @@ const Messages = () => {
   const channels = useSelector(channelsSelectors.selectAll);
   const messages = useSelector(messagesSelectors.selectAll);
   const { currentChannelId } = useSelector((state) => state.channels);
-  const [currentChannel] = channels.filter((channel) => channel.id === currentChannelId);
-  const [currentMessages] = messages.filter((message) => message.channelId === currentChannelId);
-  const messagesCountDisplay = `${messages.length} сообщений`;
-  console.log('channels', channels);
-  console.log('currentChannelId', currentChannelId);
-  console.log('Current Channel', currentChannel);
-  console.log('messages', messages);
-  console.log('Current messages', currentMessages);
-  console.log('Messages Count Display', messagesCountDisplay);
+  const currentChannel = channels.find((channel) => channel.id === currentChannelId);
+  const currentMessages = messages.filter((message) => message.channelId === currentChannelId);
+
+  // console.log('channels', channels);
+  // console.log('currentChannelId', currentChannelId);
+  // console.log('Current Channel', currentChannel);
+  // console.log('messages', messages);
+  // console.log('Current messages', currentMessages);
+  // console.log('Messages Count Display', messagesCountDisplay);
 
   const createMessage = (message) => (
     <div className="text-break mb-2">
-      <b>{message.user}</b>
+      <b>{message.username}</b>
       :
       {' '}
       {message.body}
     </div>
   );
 
-  console.log('Create Message', createMessage);
+  const messagesCountDisplay = `${currentMessages.length} сообщений`;
 
   return (
     <>
@@ -41,7 +41,7 @@ const Messages = () => {
         <span className="text-muted">{messagesCountDisplay}</span>
       </div>
       <div id="messages-box" className="chat-messages overflow-auto px-5 ">
-        {currentMessages && currentMessages.map((message) => (
+        {currentMessages.map((message) => (
           <div className="text-break mb-2" key={message.id}>
             {createMessage(message)}
           </div>
