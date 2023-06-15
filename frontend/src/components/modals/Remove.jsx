@@ -13,7 +13,7 @@ const Remove = () => {
   const { t } = useTranslation();
   const api = useApi();
   const dispatch = useDispatch();
-  const removeId = useSelector(({ modalsSlice }) => modalsSlice.id);
+  const removeId = useSelector(({ modalsSlice }) => modalsSlice.item);
 
   const setCloseModal = () => dispatch(closeModal());
 

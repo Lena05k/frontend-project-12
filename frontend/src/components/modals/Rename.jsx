@@ -24,7 +24,7 @@ const Rename = () => {
   }, []);
 
   const channels = useSelector(selectors.selectAll);
-  const currentRenameId = useSelector(({ modalsSlice }) => modalsSlice.id);
+  const currentRenameId = useSelector(({ modalsSlice }) => modalsSlice.item);
   const currentChannel = channels.filter((channel) => channel.id === currentRenameId);
   const channelNames = channels.map((channel) => channel.name);
 
