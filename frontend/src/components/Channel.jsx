@@ -1,5 +1,4 @@
 import React from 'react';
-import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -32,14 +31,6 @@ const Channel = ({ channel }) => {
 
   const btnVariant = id === currentChannelId ? 'secondary' : 'light';
 
-  const btnClass = cn(
-    'w-100',
-    'rounded-0',
-    'text-start',
-    'btn',
-    'text-truncate',
-  );
-
   const renderDropdown = () => (removable
     ? (
       <>
@@ -58,7 +49,7 @@ const Channel = ({ channel }) => {
   return (
     <li className="nav-item w-100">
       <Dropdown as={ButtonGroup} className="w-100">
-        <Button variant={btnVariant} onClick={onClick} type="button" className={btnClass}>
+        <Button variant={btnVariant} onClick={onClick} type="button" className="w-100 rounded-0 text-start text-truncate btn">
           <span className="me-1">#</span>
           { name }
         </Button>
