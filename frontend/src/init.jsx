@@ -14,7 +14,7 @@ import { actions as channelsActions } from './slices/channelsSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const promosifySocket = (socket, type, data) => new Promise((resolve, reject) => {
-  socket.emit(type, data, (err, response) => {
+  socket.timeout(5000).emit(type, data, (err, response) => {
     if (err) {
       reject(err);
     }
