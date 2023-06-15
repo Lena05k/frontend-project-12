@@ -11,7 +11,6 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.0",
     "bootstrap": "^5.2.2",
-    "classnames": "^2.3.2",
     "formik": "^2.2.9",
     "i18next": "^22.4.6",
     "leo-profanity": "^1.7.0",
