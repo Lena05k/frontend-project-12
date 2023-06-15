@@ -17,6 +17,7 @@ const Login = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const [authError, setAuthError] = useState(false);
+  const noLoginPassword = t('yup.errors.authError');
   const inputRef = useRef();
   const navigate = useNavigate();
 
@@ -41,12 +42,13 @@ const Login = () => {
         .catch((error) => {
           formik.setSubmitting(false);
           if (error.isAxiosError && error.response?.status === 401) {
+            setAuthError(true);
             inputRef.current.select();
             return;
           } else {
             toast.error(t('yup.errors.networkError'));
           }
-          toast.error(t('yup.errors.authError'));
+
           throw (error);
         });
     },
@@ -77,7 +79,6 @@ const Login = () => {
                   />
                   <Form.Label htmlFor="username">{t('forms.login.userName')}</Form.Label>
                 </Form.Group>
-
                 <Form.Group className="mb-4 form-floating">
                   <Form.Control
                     id="password"
@@ -90,7 +91,7 @@ const Login = () => {
                   />
                   <Form.Label htmlFor="password">{t('forms.login.password')}</Form.Label>
                   <div className="invalid-tooltip">
-                    {authError || formik.errors.password}
+                    {formik.errors.password || noLoginPassword}
                   </div>
                 </Form.Group>
                 <Button variant="outline-primary" className="w-100 mb-3" type="submit">
