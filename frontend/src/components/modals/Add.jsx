@@ -64,7 +64,6 @@ const Add = () => {
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
             <FormControl
-              className={nameFieldClass}
               ref={inputElement}
               id="name"
               name="name"
