@@ -8,7 +8,6 @@ import routes from '../routes.js';
 import MessageForm from './MessageForm';
 import Channels from './Channels';
 import Messages from './Messages';
-import fetchInitialData from '../slices/fetchInitialData';
 import { actions } from '../slices/channelsSlice';
 import { addMessages } from '../slices/messagesSlice';
 
@@ -32,10 +31,8 @@ const MainPage = () => {
         console.error(error);
       }
     };
-    if (fetchInitialData) {
-      fetchData();
-    }
-  }, [dispatch, t, fetchInitialData]);
+    fetchData();
+  }, [dispatch, t]);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">

@@ -8,7 +8,7 @@ import Modal from './Modal.jsx';
 import { ReactComponent as PlusIcon } from '../assets/plus-icon.svg';
 
 const renderChannel = ({ channel }) => (
-  <Channel key={channel.item} channel={channel} currentChannelId={channel.currentChannelId} />
+  <Channel key={channel.id} channel={channel} currentChannelId={channel.currentChannelId} />
 );
 
 const Channels = () => {
