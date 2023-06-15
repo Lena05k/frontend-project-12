@@ -1,5 +1,4 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,7 +7,6 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
 import routes from '../routes';
 import Header from './Header';
 import MainPage from './MainPage';
@@ -29,33 +27,28 @@ const PrivateRoute = ({ children }) => {
   );
 };
 
-const App = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-
-  return (
-    <Router>
-      <div className="d-flex flex-column h-100">
-        <Header />
-        <Routes>
-          <Route path={routes.root()} errorElement={<ErrorPage />}>
-            <Route
-              index
-              element={(
-                <PrivateRoute>
-                  <MainPage />
-                </PrivateRoute>
-              )}
-            />
-            <Route path={routes.login()} element={<Login />} />
-            <Route path={routes.signup()} element={<SignUp />} />
-            <Route path={routes.notFound()} element={<ErrorPage />} />
-          </Route>
-        </Routes>
-        <ToastContainer />
-      </div>
-    </Router>
-  );
-};
+const App = () => (
+  <Router>
+    <div className="d-flex flex-column h-100">
+      <Header />
+      <Routes>
+        <Route path={routes.root()} errorElement={<ErrorPage />}>
+          <Route
+            index
+            element={(
+              <PrivateRoute>
+                <MainPage />
+              </PrivateRoute>
+            )}
+          />
+          <Route path={routes.login()} element={<Login />} />
+          <Route path={routes.signup()} element={<SignUp />} />
+          <Route path={routes.notFound()} element={<ErrorPage />} />
+        </Route>
+      </Routes>
+      <ToastContainer />
+    </div>
+  </Router>
+);
 
 export default App;

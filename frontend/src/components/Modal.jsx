@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Modal as ModalComponent } from 'react-bootstrap';
 import getModal from './modals/index';
 
 const Modal = () => {

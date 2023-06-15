@@ -45,10 +45,9 @@ const Login = () => {
             setAuthError(true);
             inputRef.current.select();
             return;
-          } else {
-            toast.error(t('yup.errors.networkError'));
           }
 
+          toast.error(t('yup.errors.networkError'));
           throw (error);
         });
     },

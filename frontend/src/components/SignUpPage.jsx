@@ -57,7 +57,8 @@ const SignUp = () => {
         })
         .catch((error) => {
           if (error.isAxiosError && error.response.status === 401) {
-            inputEl.current.select();
+            setSignUpError(true);
+            inputRef.current.select();
             return;
           }
 
@@ -69,7 +70,7 @@ const SignUp = () => {
             toast.error(t('yup.errors.networkError'));
           }
 
-          toast.error(t('yup.errors.requestError'));
+          throw error;
         });
     },
   });
@@ -91,11 +92,11 @@ const SignUp = () => {
                     name="username"
                     type="text"
                     placeholder={t('forms.signup.userName')}
-                    isInvalid={signUpError}
                     onChange={formik.handleChange}
                     value={formik.values.username}
                     ref={inputRef}
                     disabled={formik.isSubmitting}
+                    isInvalid={(formik.touched.username && !!formik.errors.username) || signUpError}
                     noValidate
                   />
                   <Form.Label htmlFor="username">{t('forms.signup.userName')}</Form.Label>
@@ -103,16 +104,15 @@ const SignUp = () => {
                     {formik.errors.username}
                   </Form.Text>
                 </Form.Group>
-
                 <Form.Group className="mb-3 form-floating">
                   <Form.Control
                     id="password"
                     name="password"
                     type="password"
                     placeholder={t('forms.signup.password')}
-                    isInvalid={signUpError}
                     onChange={formik.handleChange}
                     disabled={formik.isSubmitting}
+                    isInvalid={(formik.touched.password && !!formik.errors.password) || signUpError}
                     noValidate
                   />
                   <Form.Label htmlFor="password">{t('forms.signup.password')}</Form.Label>

@@ -12,7 +12,6 @@ const AuthContextProvider = ({ children }) => {
 
   const logOut = useCallback(() => {
     localStorage.removeItem('user');
-    // localStorage.removeItem('userName');
     setUser(null);
   }, []);
 
