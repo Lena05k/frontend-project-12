@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { Form, Button, Card } from 'react-bootstrap';
 import * as yup from 'yup';
 import axios from 'axios';
-import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { useAuth } from '../hooks';
@@ -21,7 +20,7 @@ const SignUp = () => {
   const inputRef = useRef();
   const navigate = useNavigate();
 
-  const [signUpError, setSignUpError] = useState('');
+  const [signUpError, setSignUpError] = useState(false);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -49,7 +48,7 @@ const SignUp = () => {
     validationSchema,
     validateOnChange: false,
     onSubmit: async (values) => {
-      setSignUpError('');
+      setSignUpError(false);
       const { username, password } = values;
       axios.post(routes.apiSignupPath(), { username, password })
         .then((response) => {
@@ -57,8 +56,10 @@ const SignUp = () => {
           navigate('/');
         })
         .catch((error) => {
-          formik.setSubmitting(false);
-          inputRef.current.select();
+          if (error.isAxiosError && error.response.status === 401) {
+            inputEl.current.select();
+            return;
+          }
 
           if (error.response && error.response.status === 409) {
             toast.error(t('yup.errors.userAlreadyExists'));
@@ -71,18 +72,6 @@ const SignUp = () => {
           toast.error(t('yup.errors.requestError'));
         });
     },
-  });
-
-  const usernameFieldClass = cn({
-    'is-invalid': formik.errors.username,
-  });
-
-  const passwordFieldClass = cn({
-    'is-invalid': formik.errors.password,
-  });
-
-  const retypePasswordFieldClass = cn({
-    'is-invalid': formik.errors.retypePassword,
   });
 
   return (
@@ -102,7 +91,7 @@ const SignUp = () => {
                     name="username"
                     type="text"
                     placeholder={t('forms.signup.userName')}
-                    className={usernameFieldClass}
+                    isInvalid={signUpError}
                     onChange={formik.handleChange}
                     value={formik.values.username}
                     ref={inputRef}
@@ -121,7 +110,7 @@ const SignUp = () => {
                     name="password"
                     type="password"
                     placeholder={t('forms.signup.password')}
-                    className={passwordFieldClass}
+                    isInvalid={signUpError}
                     onChange={formik.handleChange}
                     disabled={formik.isSubmitting}
                     noValidate
@@ -137,7 +126,7 @@ const SignUp = () => {
                     name="retypePassword"
                     type="password"
                     placeholder={t('forms.signup.retypePassword')}
-                    className={retypePasswordFieldClass}
+                    isInvalid={signUpError}
                     onChange={formik.handleChange}
                     disabled={formik.isSubmitting}
                     noValidate
