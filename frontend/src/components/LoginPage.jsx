@@ -6,17 +6,17 @@ import {
 import { useNavigate, Link } from 'react-router-dom';
 import { Form, Button, Card } from 'react-bootstrap';
 import axios from 'axios';
-import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { useAuth } from '../hooks';
+import { toast } from 'react-toastify';
 import routes from '../routes';
 import loginImage from '../assets/avatar.jpg';
 
 const Login = () => {
   const { t } = useTranslation();
   const auth = useAuth();
-  const [authError, setAuthError] = useState('');
+  const [authError, setAuthError] = useState(false);
   const inputRef = useRef();
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const Login = () => {
       password: '',
     },
     onSubmit: async (values) => {
-      setAuthError('');
+      setAuthError(false);
       const { username, password } = values;
 
       return axios.post(routes.apiLoginPath(), { username, password })
@@ -38,21 +38,18 @@ const Login = () => {
           auth.logIn(response.data);
           navigate('/');
         })
-        .catch((e) => {
+        .catch((error) => {
           formik.setSubmitting(false);
-          setAuthError(t('yup.errors.authError'));
-          inputRef.current.select();
-          throw (e);
+          if (error.isAxiosError && error.response?.status === 401) {
+            inputRef.current.select();
+            return;
+          } else {
+            toast.error(t('yup.errors.networkError'));
+          }
+          toast.error(t('yup.errors.authError'));
+          throw (error);
         });
     },
-  });
-
-  const usernameFieldClass = cn({
-    'is-invalid': formik.errors.username || authError,
-  });
-
-  const passwordFieldClass = cn({
-    'is-invalid': authError || formik.errors.password,
   });
 
   return (
@@ -72,10 +69,10 @@ const Login = () => {
                     name="username"
                     type="text"
                     placeholder={t('forms.login.userName')}
-                    className={usernameFieldClass}
                     onChange={formik.handleChange}
                     value={formik.values.username}
                     ref={inputRef}
+                    isInvalid={authError}
                     required
                   />
                   <Form.Label htmlFor="username">{t('forms.login.userName')}</Form.Label>
@@ -87,8 +84,8 @@ const Login = () => {
                     name="password"
                     type="password"
                     placeholder={t('forms.login.password')}
-                    className={passwordFieldClass}
                     onChange={formik.handleChange}
+                    isInvalid={authError}
                     required
                   />
                   <Form.Label htmlFor="password">{t('forms.login.password')}</Form.Label>
