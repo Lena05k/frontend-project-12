@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import {
   Modal, Form, FormGroup, FormControl, Button,
 } from 'react-bootstrap';
-import cn from 'classnames';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -51,10 +50,6 @@ const Add = () => {
     },
   });
 
-  const nameFieldClass = cn('mb-2', {
-    'is-invalid': formik.errors.name,
-  });
-
   return (
     <Modal centered show onHide={setCloseModal}>
       <Modal.Header closeButton>
@@ -71,6 +66,7 @@ const Add = () => {
               onChange={formik.handleChange}
               value={formik.values.name}
               data-testid="input-body"
+              className="mb-2"
               isInvalid={formik.touched.name && formik.errors.name}
             />
             <Form.Label className="visually-hidden" htmlFor="name">{t('add.label')}</Form.Label>

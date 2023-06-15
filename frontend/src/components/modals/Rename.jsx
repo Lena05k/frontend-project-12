@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import {
   Modal, Form, FormGroup, FormControl, Button,
 } from 'react-bootstrap';
-import cn from 'classnames';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -55,10 +54,6 @@ const Rename = () => {
     },
   });
 
-  const nameFieldClass = cn('mb-2', {
-    'is-invalid': formik.errors.name,
-  });
-
   return (
     <Modal centered show onHide={setCloseModal}>
       <Modal.Header closeButton>
@@ -68,13 +63,14 @@ const Rename = () => {
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
             <FormControl
-              className={nameFieldClass}
               ref={inputElement}
               id="name"
               name="name"
               type="text"
+              className="mb-2"
               onChange={formik.handleChange}
               value={formik.values.name}
+              isInvalid={formik.touched.name && formik.errors.name}
               data-testid="input-body"
             />
             <Form.Label className="visually-hidden" htmlFor="name">{t('rename.label')}</Form.Label>
