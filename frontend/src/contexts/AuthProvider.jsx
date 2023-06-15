@@ -30,7 +30,7 @@ const AuthContextProvider = ({ children }) => {
     logIn,
     logOut,
     getAuthHeader,
-  }), [user, logIn, logOut]);
+  }), [user, logIn, logOut, getAuthHeader]);
 
   return (
     <AuthContext.Provider value={memorizedValue}>
