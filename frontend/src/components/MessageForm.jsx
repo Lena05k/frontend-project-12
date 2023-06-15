@@ -25,9 +25,13 @@ const MessageForm = () => {
     onSubmit: async (values, { resetForm }) => {
       const { message } = values;
       const body = leoProfanity.clean(message);
-
+      const data = {
+        body: body,
+        channelId: currentChannelId,
+        username,
+      };
       try {
-        await api.addNewMessage({ body: body, channelId: currentChannelId, username });
+        await api.addNewMessage(data);
         resetForm();
       } catch {
         toast.error(t('yup.errors.networkError'));

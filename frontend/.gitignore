@@ -13,9 +13,6 @@
 # production
 /build
 
-/src/.eslintrc.yml
-/src/.eslintignore
-
 # misc
 .DS_Store
 .env.local

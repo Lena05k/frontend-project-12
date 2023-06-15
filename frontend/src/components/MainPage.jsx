@@ -32,7 +32,7 @@ const MainPage = () => {
       }
     };
     fetchData();
-  }, [dispatch, t]);
+  }, [dispatch, t, addChannels, headers, setCurrentChannelId]);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
