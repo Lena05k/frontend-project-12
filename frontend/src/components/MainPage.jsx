@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
@@ -15,6 +16,7 @@ const MainPage = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const headers = auth.getAuthHeader();
   const { addChannels, setCurrentChannelId } = actions;
 
@@ -27,7 +29,18 @@ const MainPage = () => {
         dispatch(setCurrentChannelId(currentChannelId));
         dispatch(addMessages(messages));
       } catch (error) {
-        toast.error(t('socketMessages.failedDataLoading'));
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
+          return;
+        }
+
+        if (error.response?.status === 401) {
+          navigate(routes.login());
+          toast.error(t('socketMessages.failedDataLoading'));
+        } else {
+          toast.error(t('errors.network'));
+        }
+
         console.error(error);
       }
     };
