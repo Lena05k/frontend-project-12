@@ -13,6 +13,7 @@ export default {
         networkError: 'Ошибка соединения',
         requestError: 'Запрос к серверу завершился с ошибкой',
         renderError: 'Ошибка при отображении страницы',
+        unknown: 'Неизвестная ошибка',
       },
     },
     socketMessages: {
