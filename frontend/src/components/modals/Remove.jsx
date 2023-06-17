@@ -13,15 +13,15 @@ const Remove = () => {
   const { t } = useTranslation();
   const api = useApi();
   const dispatch = useDispatch();
-  const removeId = useSelector(({ modalsSlice }) => modalsSlice.item);
+  const channelId = useSelector(({ modalsSlice }) => modalsSlice.item);
 
   const setCloseModal = () => dispatch(closeModal());
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = api.removeChannel(removeId);
-      dispatch(actions.setCurrentChannelId(data.id));
+      const data = await api.removeChannel(channelId);
+      dispatch(actions.setCurrentChannelId(data));
       toast.success(t('socketMessages.successfulChannelRemove'));
       setCloseModal();
     } catch (error) {

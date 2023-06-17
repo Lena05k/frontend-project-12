@@ -38,10 +38,10 @@ const Add = () => {
     },
     validationSchema,
     validateOnChange: false,
-    onSubmit: ({ name }) => {
+    onSubmit: async ({ name }) => {
       try {
-        const data = api.createChannel({ name, changeable: true });
-        dispatch(actions.setCurrentChannelId(data.id));
+        const data = await api.createChannel({ name, changeable: true });
+        dispatch(actions.setCurrentChannelId(data));
         setCloseModal();
         toast.success(t('socketMessages.successfulChannelCreation'));
       } catch (error) {
