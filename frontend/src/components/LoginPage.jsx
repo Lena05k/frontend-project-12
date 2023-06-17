@@ -40,15 +40,17 @@ const Login = () => {
           navigate('/');
         })
         .catch((error) => {
-          formik.setSubmitting(false);
-          if (error.isAxiosError && error.response?.status === 401) {
-            setAuthError(true);
-            inputRef.current.select();
+          console.error(error);
+          if (!error.isAxiosError) {
+            toast.error(t('errors.unknown'));
             return;
           }
-
-          toast.error(t('yup.errors.networkError'));
-          throw (error);
+          if (error.response?.status === 401) {
+            setAuthError(true);
+            inputRef.current.select();
+          } else {
+            toast.error(t('yup.errors.networkError'));
+          }
         });
     },
   });
