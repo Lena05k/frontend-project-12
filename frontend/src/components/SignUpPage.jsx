@@ -27,16 +27,22 @@ const SignUp = () => {
   }, []);
 
   const validationSchema = yup.object().shape({
-    username: yup.string()
+    username: yup
+      .string()
+      .trim()
       .required(t('yup.errors.required'))
       .min(3, t('yup.errors.userNameLength'))
       .max(20, t('yup.errors.userNameLength')),
-    password: yup.string()
+    password: yup
+      .string()
+      .trim()
       .required(t('yup.errors.required'))
       .min(6, t('yup.errors.passwordLength')),
-    retypePassword: yup.string()
+    retypePassword: yup
+      .string()
+      .trim()
       .required(t('yup.errors.required'))
-      .oneOf([yup.ref('password')], t('yup.errors.passwordsDiffer')),
+      .oneOf([yup.ref('password'), null], t('yup.errors.passwordsDiffer')),
   });
 
   const formik = useFormik({
@@ -56,21 +62,18 @@ const SignUp = () => {
           navigate('/');
         })
         .catch((error) => {
-          if (error.isAxiosError && error.response.status === 401) {
-            setSignUpError(true);
-            inputRef.current.select();
+          if (!error.isAxiosError) {
+            toast.error(t('errors.unknown'));
             return;
           }
 
-          if (error.response && error.response.status === 409) {
+          if (error.response.status === 409) {
+            setSignUpError(true);
+            inputRef.current.select();
             toast.error(t('yup.errors.userAlreadyExists'));
-          }
-
-          if (error.message === 'Network Error') {
+          } else {
             toast.error(t('yup.errors.networkError'));
           }
-
-          throw error;
         });
     },
   });
@@ -96,7 +99,7 @@ const SignUp = () => {
                     value={formik.values.username}
                     ref={inputRef}
                     disabled={formik.isSubmitting}
-                    isInvalid={(formik.touched.username && !!formik.errors.username) || signUpError}
+                    isInvalid={(formik.touched.username && formik.errors.username) || signUpError}
                     noValidate
                   />
                   <Form.Label htmlFor="username">{t('forms.signup.userName')}</Form.Label>
@@ -112,7 +115,7 @@ const SignUp = () => {
                     placeholder={t('forms.signup.password')}
                     onChange={formik.handleChange}
                     disabled={formik.isSubmitting}
-                    isInvalid={(formik.touched.password && !!formik.errors.password) || signUpError}
+                    isInvalid={(formik.touched.password && formik.errors.password) || signUpError}
                     noValidate
                   />
                   <Form.Label htmlFor="password">{t('forms.signup.password')}</Form.Label>
@@ -126,9 +129,9 @@ const SignUp = () => {
                     name="retypePassword"
                     type="password"
                     placeholder={t('forms.signup.retypePassword')}
-                    isInvalid={signUpError}
                     onChange={formik.handleChange}
                     disabled={formik.isSubmitting}
+                    isInvalid={(formik.touched.retypePassword && formik.errors.retypePassword)}
                     noValidate
                   />
                   <Form.Label htmlFor="retypePassword">{t('forms.signup.retypePassword')}</Form.Label>
