@@ -26,7 +26,7 @@ const Channel = ({ channel }) => {
 
   const onRename = (e) => {
     e.preventDefault();
-    setShowModal('renaming', channel.id);
+    setShowModal('renaming', channel);
   };
 
   const btnVariant = id === currentChannelId ? 'secondary' : 'light';
