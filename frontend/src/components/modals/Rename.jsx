@@ -69,7 +69,7 @@ const Rename = () => {
               type="text"
               className="mb-2"
               onChange={formik.handleChange}
-              value={formik.values.name}
+              value={formik.values.name || ''}
               isInvalid={formik.touched.name && formik.errors.name}
               data-testid="input-body"
             />
