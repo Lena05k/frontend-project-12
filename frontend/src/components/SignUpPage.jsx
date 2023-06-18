@@ -70,7 +70,6 @@ const SignUp = () => {
           if (error.response.status === 409) {
             setSignUpError(true);
             inputRef.current.select();
-            toast.error(t('yup.errors.userAlreadyExists'));
           } else {
             toast.error(t('yup.errors.networkError'));
           }
@@ -135,12 +134,10 @@ const SignUp = () => {
                     noValidate
                   />
                   <Form.Label htmlFor="retypePassword">{t('forms.signup.retypePassword')}</Form.Label>
-                  <Form.Text className="invalid-tooltip">
-                    {formik.errors.retypePassword}
-                  </Form.Text>
-                  <Form.Text className="text-danger">
-                    {signUpError}
-                  </Form.Text>
+                  <Form.Control.Feedback type="invalid" tooltip>
+                    {signUpError ? t('yup.errors.userAlreadyExists')
+                      : t(formik.errors.retypePassword)}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Button variant="outline-primary" disabled={formik.isSubmitting} className="w-100 mb-3" type="submit">
                   {t('buttonNames.signup')}
