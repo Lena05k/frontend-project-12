@@ -23,9 +23,9 @@ const Rename = () => {
   }, []);
 
   const channels = useSelector(selectors.selectAll);
-  const channelId = useSelector(({ modalsSlice }) => modalsSlice.item);
-  const currentChannel = channels.filter((channel) => channel.id === channelId);
-  const channelNames = channels.map((channel) => channel.name);
+  const channel = useSelector(({ modalsSlice }) => modalsSlice.item);
+  const currentChannel = channels.filter((chanel) => chanel.id === channel);
+  const channelNames = channels.map((chanel) => chanel.name);
 
   const validationSchema = yup.object().shape({
     name: yup.string()
@@ -44,7 +44,7 @@ const Rename = () => {
     onSubmit: async () => {
       const { name } = formik.values;
       try {
-        const data = await api.renameChannel({ id: channelId.id, name });
+        const data = await api.renameChannel({ id: channel.id, name });
         dispatch(actions.setCurrentChannelId(data));
         toast.success(t('socketMessages.successfulChannelRename'));
         setCloseModal();
